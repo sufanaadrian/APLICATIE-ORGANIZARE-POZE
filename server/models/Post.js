@@ -14,6 +14,8 @@ const postSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    camerabody: String,
+    cameralens: String,
     location: String,
     description: String,
     picturePath: String,

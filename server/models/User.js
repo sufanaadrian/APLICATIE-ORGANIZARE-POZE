@@ -34,8 +34,8 @@ const UserSchema = new mongoose.Schema(
       default: [],
     },
     location: String,
-    occupation: String,
-    viewedProfile: Number,
+    camerabody: String,
+    cameralens: String,
     impressions: Number,
   },
   { timestamps: true }

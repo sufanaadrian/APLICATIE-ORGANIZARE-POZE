@@ -2,8 +2,9 @@ import {
   ManageAccountsOutlined,
   EditOutlined,
   LocationOnOutlined,
-  WorkOutlineOutlined,
 } from "@mui/icons-material";
+import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
+import CameraIcon from "@mui/icons-material/Camera";
 import { Box, Typography, Divider, useTheme } from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
@@ -42,8 +43,8 @@ const UserWidget = ({ userId, picturePath }) => {
     firstName,
     lastName,
     location,
-    occupation,
-    viewedProfile,
+    camerabody,
+    cameralens,
     impressions,
     friends,
   } = user;
@@ -86,9 +87,13 @@ const UserWidget = ({ userId, picturePath }) => {
           <LocationOnOutlined fontSize="large" sx={{ color: main }} />
           <Typography color={medium}>{location}</Typography>
         </Box>
-        <Box display="flex" alignItems="center" gap="1rem">
-          <WorkOutlineOutlined fontSize="large" sx={{ color: main }} />
-          <Typography color={medium}>{occupation}</Typography>
+        <Box display="flex" alignItems="center" gap="1rem" paddingTop="1rem">
+          <CameraAltOutlinedIcon fontSize="large" sx={{ color: main }} />
+          <Typography color={medium}>{camerabody}</Typography>
+        </Box>
+        <Box display="flex" alignItems="center" gap="1rem" paddingTop="0.4rem">
+          <CameraIcon fontSize="large" sx={{ color: main }} />
+          <Typography color={medium}>{cameralens}</Typography>
         </Box>
       </Box>
 
@@ -96,12 +101,6 @@ const UserWidget = ({ userId, picturePath }) => {
 
       {/* THIRD ROW */}
       <Box p="1rem 0">
-        <FlexBetween mb="0.5rem">
-          <Typography color={medium}>Who's viewed your profile</Typography>
-          <Typography color={main} fontWeight="500">
-            {viewedProfile}
-          </Typography>
-        </FlexBetween>
         <FlexBetween>
           <Typography color={medium}>Impressions of your post</Typography>
           <Typography color={main} fontWeight="500">

@@ -13,7 +13,8 @@ export const register = async (req, res) => {
       picturePath,
       friends,
       location,
-      occupation,
+      camerabody,
+      cameralens,
     } = req.body;
 
     const salt = await bcrypt.genSalt();
@@ -27,8 +28,8 @@ export const register = async (req, res) => {
       picturePath,
       friends,
       location,
-      occupation,
-      viewedProfile: Math.floor(Math.random() * 10000),
+      camerabody,
+      cameralens,
       impressions: Math.floor(Math.random() * 10000),
     });
     const savedUser = await newUser.save();

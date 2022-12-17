@@ -10,6 +10,8 @@ export const createPost = async (req, res) => {
       userId,
       firstName: user.firstName,
       lastName: user.lastName,
+      camerabody: user.camerabody,
+      cameralens: user.cameralens,
       location: user.location,
       description,
       userPicturePath: user.picturePath,

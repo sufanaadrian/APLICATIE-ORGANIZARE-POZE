@@ -22,7 +22,8 @@ const registerSchema = yup.object().shape({
   email: yup.string().email("invalid email").required("required"),
   password: yup.string().required("required"),
   location: yup.string().required("required"),
-  occupation: yup.string().required("required"),
+  camerabody: yup.string().required("required"),
+  cameralens: yup.string().required("required"),
   picture: yup.string().required("required"),
 });
 
@@ -37,7 +38,8 @@ const initialValuesRegister = {
   email: "",
   password: "",
   location: "",
-  occupation: "",
+  camerabody: "",
+  cameralens: "",
   picture: "",
 };
 
@@ -162,15 +164,27 @@ const Form = () => {
                   sx={{ gridColumn: "span 4" }}
                 />
                 <TextField
-                  label="Occupation"
+                  label="Camera body"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.occupation}
-                  name="occupation"
+                  value={values.camerabody}
+                  name="camerabody"
                   error={
-                    Boolean(touched.occupation) && Boolean(errors.occupation)
+                    Boolean(touched.camerabody) && Boolean(errors.camerabody)
                   }
-                  helperText={touched.occupation && errors.occupation}
+                  helperText={touched.camerabody && errors.camerabody}
+                  sx={{ gridColumn: "span 4" }}
+                />
+                <TextField
+                  label="Camera lens"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.cameralens}
+                  name="cameralens"
+                  error={
+                    Boolean(touched.cameralens) && Boolean(errors.cameralens)
+                  }
+                  helperText={touched.cameralens && errors.cameralens}
                   sx={{ gridColumn: "span 4" }}
                 />
                 <Box

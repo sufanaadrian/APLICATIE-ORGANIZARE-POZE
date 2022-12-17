@@ -4,22 +4,22 @@ import {
   IconButton,
   InputBase,
   Typography,
-  Select,
   MenuItem,
-  FormControl,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
 import {
   Search,
   Message,
+  AccountBoxOutlined,
   DarkMode,
   LightMode,
   Notifications,
-  Help,
+  CollectionsOutlined,
   Menu,
   Close,
 } from "@mui/icons-material";
+//import CollectionsOutlinedIcon from "@mui/icons-material/CollectionsOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
@@ -29,8 +29,8 @@ const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+  const loggedInUserId = useSelector((state) => state.user._id);
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
@@ -38,9 +38,6 @@ const Navbar = () => {
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
-
-  const fullName = `${user.firstName} ${user.lastName}`;
-
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
       <FlexBetween gap="1.75rem">
@@ -76,6 +73,19 @@ const Navbar = () => {
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
+          <MenuItem value="Gallery" onClick={() => navigate("/gallery")}>
+            <CollectionsOutlined
+              sx={{ fontSize: "30px" }}
+            ></CollectionsOutlined>
+            <Typography>Gallery</Typography>
+          </MenuItem>
+          <AccountBoxOutlined
+            onClick={() => navigate(`/profile/${loggedInUserId}`)}
+            sx={{ fontSize: "30px" }}
+          ></AccountBoxOutlined>
+          <Message sx={{ fontSize: "25px" }} />
+          <Notifications sx={{ fontSize: "25px" }} />
+
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
@@ -83,33 +93,7 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
-          <Message sx={{ fontSize: "25px" }} />
-          <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} />
-          <FormControl variant="standard" value={fullName}>
-            <Select
-              value={fullName}
-              sx={{
-                backgroundColor: neutralLight,
-                width: "150px",
-                borderRadius: "0.25rem",
-                p: "0.25rem 1rem",
-                "& .MuiSvgIcon-root": {
-                  pr: "0.25rem",
-                  width: "3rem",
-                },
-                "& .MuiSelect-select:focus": {
-                  backgroundColor: neutralLight,
-                },
-              }}
-              input={<InputBase />}
-            >
-              <MenuItem value={fullName}>
-                <Typography>{fullName}</Typography>
-              </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
-            </Select>
-          </FormControl>
+          <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
         </FlexBetween>
       ) : (
         <IconButton
@@ -148,6 +132,19 @@ const Navbar = () => {
             alignItems="center"
             gap="3rem"
           >
+            <MenuItem value="Gallery" onClick={() => navigate("/gallery")}>
+              <CollectionsOutlined
+                sx={{ fontSize: "30px" }}
+              ></CollectionsOutlined>
+              <Typography>Gallery</Typography>
+            </MenuItem>
+            <AccountBoxOutlined
+              onClick={() => navigate(`/profile/${loggedInUserId}`)}
+              sx={{ fontSize: "30px" }}
+            ></AccountBoxOutlined>
+            <Message sx={{ fontSize: "25px" }} />
+            <Notifications sx={{ fontSize: "25px" }} />
+
             <IconButton
               onClick={() => dispatch(setMode())}
               sx={{ fontSize: "25px" }}
@@ -158,35 +155,7 @@ const Navbar = () => {
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
               )}
             </IconButton>
-            <Message sx={{ fontSize: "25px" }} />
-            <Notifications sx={{ fontSize: "25px" }} />
-            <Help sx={{ fontSize: "25px" }} />
-            <FormControl variant="standard" value={fullName}>
-              <Select
-                value={fullName}
-                sx={{
-                  backgroundColor: neutralLight,
-                  width: "150px",
-                  borderRadius: "0.25rem",
-                  p: "0.25rem 1rem",
-                  "& .MuiSvgIcon-root": {
-                    pr: "0.25rem",
-                    width: "3rem",
-                  },
-                  "& .MuiSelect-select:focus": {
-                    backgroundColor: neutralLight,
-                  },
-                }}
-                input={<InputBase />}
-              >
-                <MenuItem value={fullName}>
-                  <Typography>{fullName}</Typography>
-                </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
-                  Log Out
-                </MenuItem>
-              </Select>
-            </FormControl>
+            <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
           </FlexBetween>
         </Box>
       )}
