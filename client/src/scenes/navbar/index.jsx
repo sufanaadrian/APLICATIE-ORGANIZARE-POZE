@@ -30,13 +30,15 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-  const isNonMobileScreens = useMediaQuery("(min-width:1000px");
+  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
+
   const fullName = `${user.firstName} ${user.lastName}`;
 
   return (
@@ -44,7 +46,7 @@ const Navbar = () => {
       <FlexBetween gap="1.75rem">
         <Typography
           fontWeight="bold"
-          fontSize="clamp(1rem,2rem,2.25rem)"
+          fontSize="clamp(1rem, 2rem, 2.25rem)"
           color="primary"
           onClick={() => navigate("/home")}
           sx={{
@@ -54,7 +56,7 @@ const Navbar = () => {
             },
           }}
         >
-          PhotoWorld
+          Photogram
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
@@ -70,8 +72,9 @@ const Navbar = () => {
           </FlexBetween>
         )}
       </FlexBetween>
-      {/* Desktop navigation */}
-      {isNonMobileScreens ? ( //flip between light and dark mode
+
+      {/* DESKTOP NAV */}
+      {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
@@ -115,7 +118,8 @@ const Navbar = () => {
           <Menu />
         </IconButton>
       )}
-      {/* Mobile Navigation */}
+
+      {/* MOBILE NAV */}
       {!isNonMobileScreens && isMobileMenuToggled && (
         <Box
           position="fixed"
@@ -127,7 +131,7 @@ const Navbar = () => {
           minWidth="300px"
           backgroundColor={background}
         >
-          {/* Close icon */}
+          {/* CLOSE ICON */}
           <Box display="flex" justifyContent="flex-end" p="1rem">
             <IconButton
               onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
@@ -135,7 +139,8 @@ const Navbar = () => {
               <Close />
             </IconButton>
           </Box>
-          {/* Menu Items */}
+
+          {/* MENU ITEMS */}
           <FlexBetween
             display="flex"
             flexDirection="column"
@@ -188,4 +193,5 @@ const Navbar = () => {
     </FlexBetween>
   );
 };
+
 export default Navbar;
