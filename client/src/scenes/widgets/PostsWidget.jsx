@@ -16,7 +16,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     const data = await response.json();
     dispatch(setPosts({ posts: data }));
   };
-
   const getUserPosts = async () => {
     const response = await fetch(
       `http://localhost:3001/posts/${userId}/posts`,
@@ -36,10 +35,16 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       getPosts();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
+  const sortedPosts = [...posts].sort((a, b) => {
+    // Compare the values of the property you want to sort by
+    // and return a negative number if a is greater than b,
+    // a positive number if a is less than b,
+    // and 0 if a and b are equal.
+    return a.createdAt > b.createdAt ? -1 : 1;
+  });
   return (
     <>
-      {posts.map(
+      {sortedPosts.map(
         ({
           _id,
           userId,
