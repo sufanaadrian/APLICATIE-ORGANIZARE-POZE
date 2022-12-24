@@ -1,10 +1,8 @@
 import {
   EditOutlined,
   DeleteOutlined,
-  AttachFileOutlined,
   GifBoxOutlined,
   ImageOutlined,
-  MicOutlined,
   MoreHorizOutlined,
 } from "@mui/icons-material";
 import {
@@ -36,6 +34,8 @@ const MyPostWidget = ({ picturePath }) => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
+  const loggedInFirstName = useSelector((state) => state.user.firstName);
+  const loggedInLastName = useSelector((state) => state.user.lastName);
 
   const handlePost = async () => {
     const formData = new FormData();
@@ -45,7 +45,6 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picture", image);
       formData.append("picturePath", image.name);
     }
-
     const response = await fetch(`http://localhost:3001/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
@@ -60,6 +59,9 @@ const MyPostWidget = ({ picturePath }) => {
   return (
     <WidgetWrapper>
       <FlexBetween gap="1.5rem">
+        <Typography>
+          Hello {loggedInFirstName} {loggedInLastName}
+        </Typography>
         <UserImage image={picturePath} />
         <InputBase
           placeholder="What's on your mind..."
@@ -137,16 +139,6 @@ const MyPostWidget = ({ picturePath }) => {
               <GifBoxOutlined sx={{ color: mediumMain }} />
               <Typography color={mediumMain}>Clip</Typography>
             </FlexBetween>
-
-            <FlexBetween gap="0.25rem">
-              <AttachFileOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Attachment</Typography>
-            </FlexBetween>
-
-            <FlexBetween gap="0.25rem">
-              <MicOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Audio</Typography>
-            </FlexBetween>
           </>
         ) : (
           <FlexBetween gap="0.25rem">
@@ -163,7 +155,7 @@ const MyPostWidget = ({ picturePath }) => {
             borderRadius: "3rem",
           }}
         >
-          POST
+          PUBLISH
         </Button>
       </FlexBetween>
     </WidgetWrapper>

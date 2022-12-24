@@ -2,16 +2,16 @@ import Post from "../models/Post.js";
 import User from "../models/User.js";
 
 /* CREATE */
-export const createPost = async (req, res) => {
+export const createPostInFeedFunc = async (req, res) => {
   try {
     const { userId, description, picturePath } = req.body;
     const user = await User.findById(userId);
-    const newPost = new Post({
+    const newPostInfEED = new Post({
       userId,
       firstName: user.firstName,
       lastName: user.lastName,
-      camerabody: user.camerabody,
-      cameralens: user.cameralens,
+      cameraBody: user.cameraBody,
+      cameraLens: user.cameraLens,
       location: user.location,
       description,
       userPicturePath: user.picturePath,
@@ -19,7 +19,7 @@ export const createPost = async (req, res) => {
       likes: {},
       comments: [],
     });
-    await newPost.save();
+    await newPostInfEED.save();
 
     const post = await Post.find();
     res.status(201).json(post);
@@ -29,7 +29,7 @@ export const createPost = async (req, res) => {
 };
 
 /* READ */
-export const getFeedPosts = async (req, res) => {
+export const getPostsFromFeedFunc = async (req, res) => {
   try {
     const post = await Post.find();
     res.status(200).json(post);
@@ -38,7 +38,7 @@ export const getFeedPosts = async (req, res) => {
   }
 };
 
-export const getUserPosts = async (req, res) => {
+export const getPostsByUserFunc = async (req, res) => {
   try {
     const { userId } = req.params;
     const post = await Post.find({ userId });
@@ -49,7 +49,7 @@ export const getUserPosts = async (req, res) => {
 };
 
 /* UPDATE */
-export const likePost = async (req, res) => {
+export const likePostFromFeedFunc = async (req, res) => {
   try {
     const { id } = req.params;
     const { userId } = req.body;

@@ -8,3 +8,6 @@ body,
   width: 100%;
   font-family: "Rubik", sans-serif;
 }
+.MuiPopover-root .MuiMenu-paper {
+  opacity: 0.5 !important;
+}

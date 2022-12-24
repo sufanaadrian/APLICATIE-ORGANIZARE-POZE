@@ -43,8 +43,8 @@ const UserWidget = ({ userId, picturePath }) => {
     firstName,
     lastName,
     location,
-    camerabody,
-    cameralens,
+    cameraBody,
+    cameraLens,
     impressions,
     friends,
   } = user;
@@ -89,11 +89,11 @@ const UserWidget = ({ userId, picturePath }) => {
         </Box>
         <Box display="flex" alignItems="center" gap="1rem" paddingTop="1rem">
           <CameraAltOutlinedIcon fontSize="large" sx={{ color: main }} />
-          <Typography color={medium}>{camerabody}</Typography>
+          <Typography color={medium}>{cameraBody}</Typography>
         </Box>
         <Box display="flex" alignItems="center" gap="1rem" paddingTop="0.4rem">
           <CameraIcon fontSize="large" sx={{ color: main }} />
-          <Typography color={medium}>{cameralens}</Typography>
+          <Typography color={medium}>{cameraLens}</Typography>
         </Box>
       </Box>
 

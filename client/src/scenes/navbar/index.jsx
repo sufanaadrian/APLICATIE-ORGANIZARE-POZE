@@ -1,15 +1,6 @@
 import { useState } from "react";
+import "../../index.css";
 import {
-  Box,
-  IconButton,
-  InputBase,
-  Typography,
-  MenuItem,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
-import {
-  Search,
   Message,
   AccountBoxOutlined,
   DarkMode,
@@ -19,144 +10,167 @@ import {
   Menu,
   Close,
 } from "@mui/icons-material";
-//import CollectionsOutlinedIcon from "@mui/icons-material/CollectionsOutlined";
+import {
+  Box,
+  IconButton,
+  Typography,
+  MenuItem,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
+
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
+import { red } from "@mui/material/colors";
 
 const Navbar = () => {
-  const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
+  const isDesktop = useMediaQuery("(min-width: 1000px)"); //if width >1000 we are on desktop
+  const loggedInUserId = useSelector((state) => state.user._id);
+  const [isMobileDropDownPressed, setIsMobileDropDownPressed] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-  const loggedInUserId = useSelector((state) => state.user._id);
 
   const theme = useTheme();
-  const neutralLight = theme.palette.neutral.light;
-  const dark = theme.palette.neutral.dark;
-  const background = theme.palette.background.default;
-  const primaryLight = theme.palette.primary.light;
-  const alt = theme.palette.background.alt;
+  const darkColor = theme.palette.neutral.dark;
+  const backgroundColor = theme.palette.background.default;
+  const primaryDarkColor = theme.palette.primary.dark;
+  const alternativeColor = theme.palette.background.alt;
   return (
-    <FlexBetween padding="1rem 6%" backgroundColor={alt}>
+    <FlexBetween padding="1rem 6%" backgroundColor={alternativeColor}>
       <FlexBetween gap="1.75rem">
         <Typography
-          fontWeight="bold"
-          fontSize="clamp(1rem, 2rem, 2.25rem)"
           color="primary"
+          fontWeight="bold"
+          textOverflow="ellipsis"
+          fontSize="clamp(1rem, 2rem, 2.35rem)"
           onClick={() => navigate("/home")}
           sx={{
             "&:hover": {
-              color: primaryLight,
+              color: primaryDarkColor,
               cursor: "pointer",
             },
           }}
         >
           Photogram
         </Typography>
-        {isNonMobileScreens && (
-          <FlexBetween
-            backgroundColor={neutralLight}
-            borderRadius="9px"
-            gap="3rem"
-            padding="0.1rem 1.5rem"
-          >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
-            </IconButton>
-          </FlexBetween>
-        )}
       </FlexBetween>
 
       {/* DESKTOP NAV */}
-      {isNonMobileScreens ? (
+      {isDesktop ? (
         <FlexBetween gap="2rem">
           <MenuItem value="Gallery" onClick={() => navigate("/gallery")}>
             <CollectionsOutlined
-              sx={{ fontSize: "30px" }}
+              sx={{ fontSize: "35px" }}
             ></CollectionsOutlined>
             <Typography>Gallery</Typography>
           </MenuItem>
-          <AccountBoxOutlined
-            onClick={() => navigate(`/profile/${loggedInUserId}`)}
-            sx={{ fontSize: "30px" }}
-          ></AccountBoxOutlined>
-          <Message sx={{ fontSize: "25px" }} />
-          <Notifications sx={{ fontSize: "25px" }} />
+          <MenuItem>
+            <AccountBoxOutlined
+              onClick={() => navigate(`/profile/${loggedInUserId}`)}
+              sx={{ fontSize: "35px" }}
+            ></AccountBoxOutlined>
+          </MenuItem>
+
+          <Message sx={{ fontSize: "20px" }} />
+          <Notifications sx={{ fontSize: "20px" }} />
 
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
-              <DarkMode sx={{ fontSize: "25px" }} />
+              <LightMode sx={{ fontSize: "20px" }} />
             ) : (
-              <LightMode sx={{ color: dark, fontSize: "25px" }} />
+              <DarkMode sx={{ color: darkColor, fontSize: "20px" }} />
             )}
           </IconButton>
           <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
         </FlexBetween>
       ) : (
         <IconButton
-          onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
+          onClick={() => setIsMobileDropDownPressed(!isMobileDropDownPressed)}
         >
           <Menu />
         </IconButton>
       )}
 
       {/* MOBILE NAV */}
-      {!isNonMobileScreens && isMobileMenuToggled && (
+      {!isDesktop && isMobileDropDownPressed && (
         <Box
           position="fixed"
           right="0"
           bottom="0"
           height="100%"
           zIndex="10"
-          maxWidth="500px"
-          minWidth="300px"
-          backgroundColor={background}
+          maxWidth="300px"
+          minWidth="100px"
+          backgroundColor={backgroundColor}
         >
-          {/* CLOSE ICON */}
-          <Box display="flex" justifyContent="flex-end" p="1rem">
-            <IconButton
-              onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
-            >
-              <Close />
-            </IconButton>
-          </Box>
-
           {/* MENU ITEMS */}
           <FlexBetween
-            display="flex"
             flexDirection="column"
             justifyContent="center"
-            alignItems="center"
-            gap="3rem"
+            gap="2rem"
           >
             <MenuItem value="Gallery" onClick={() => navigate("/gallery")}>
               <CollectionsOutlined
-                sx={{ fontSize: "30px" }}
+                sx={{ fontSize: "35px" }}
               ></CollectionsOutlined>
-              <Typography>Gallery</Typography>
+              <Typography p="2rem 0rem">Gallery</Typography>
             </MenuItem>
             <AccountBoxOutlined
               onClick={() => navigate(`/profile/${loggedInUserId}`)}
-              sx={{ fontSize: "30px" }}
+              sx={{ fontSize: "35px" }}
             ></AccountBoxOutlined>
-            <Message sx={{ fontSize: "25px" }} />
-            <Notifications sx={{ fontSize: "25px" }} />
+            <Message sx={{ fontSize: "20px" }} />
+            <Notifications sx={{ fontSize: "20px" }} />
 
             <IconButton
               onClick={() => dispatch(setMode())}
-              sx={{ fontSize: "25px" }}
+              sx={{ fontSize: "20px" }}
             >
               {theme.palette.mode === "dark" ? (
-                <DarkMode sx={{ fontSize: "25px" }} />
+                <LightMode sx={{ fontSize: "20px" }} />
               ) : (
-                <LightMode sx={{ color: dark, fontSize: "25px" }} />
+                <DarkMode sx={{ color: darkColor, fontSize: "20px" }} />
               )}
             </IconButton>
-            <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+
+            <Typography
+              onClick={() => dispatch(setLogout())}
+              fontSize="15px"
+              fontWeight="bold"
+              sx={{
+                "&:hover": {
+                  cursor: "pointer",
+                  transition: "all 0.3s",
+                  transform: "scale(1.1) ",
+                },
+              }}
+            >
+              Log Out
+            </Typography>
           </FlexBetween>
+          {/* CLOSE ICON */}
+          <Box position="fixed" bottom="0" p="0rem 1.5rem">
+            <MenuItem
+              value="Close"
+              sx={{
+                "&:hover": {
+                  color: "red",
+                  cursor: "pointer",
+                  backgroundColor: backgroundColor,
+                  transition: "all 0.3s",
+                  transform: "scale(1.4) rotate(180deg)",
+                },
+              }}
+              onClick={() =>
+                setIsMobileDropDownPressed(!isMobileDropDownPressed)
+              }
+            >
+              <Close sx={{ fontSize: "35px" }}></Close>
+            </MenuItem>
+          </Box>
         </Box>
       )}
     </FlexBetween>

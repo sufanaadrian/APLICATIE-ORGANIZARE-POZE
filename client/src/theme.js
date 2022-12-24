@@ -1,5 +1,5 @@
 // color design tokens export
-export const colorTokens = {
+export const colorValues = {
   grey: {
     0: "#FFFFFF",
     10: "#F6F6F6",
@@ -38,39 +38,39 @@ export const themeSettings = (mode) => {
         ? {
             // palette values for dark mode
             primary: {
-              dark: colorTokens.primary[200],
-              main: colorTokens.primary[500],
-              light: colorTokens.primary[800],
+              dark: colorValues.primary[200],
+              main: colorValues.primary[500],
+              light: colorValues.primary[800],
             },
             neutral: {
-              dark: colorTokens.grey[100],
-              main: colorTokens.grey[200],
-              mediumMain: colorTokens.grey[300],
-              medium: colorTokens.grey[400],
-              light: colorTokens.grey[700],
+              dark: colorValues.grey[100],
+              main: colorValues.grey[200],
+              mediumMain: colorValues.grey[300],
+              medium: colorValues.grey[400],
+              light: colorValues.grey[700],
             },
             background: {
-              default: colorTokens.grey[900],
-              alt: colorTokens.grey[800],
+              default: colorValues.grey[900],
+              alt: colorValues.grey[800],
             },
           }
         : {
             // palette values for light mode
             primary: {
-              dark: colorTokens.primary[700],
-              main: colorTokens.primary[500],
-              light: colorTokens.primary[50],
+              dark: colorValues.primary[700],
+              main: colorValues.primary[500],
+              light: colorValues.primary[50],
             },
             neutral: {
-              dark: colorTokens.grey[700],
-              main: colorTokens.grey[500],
-              mediumMain: colorTokens.grey[400],
-              medium: colorTokens.grey[300],
-              light: colorTokens.grey[50],
+              dark: colorValues.grey[700],
+              main: colorValues.grey[500],
+              mediumMain: colorValues.grey[400],
+              medium: colorValues.grey[300],
+              light: colorValues.grey[50],
             },
             background: {
-              default: colorTokens.grey[10],
-              alt: colorTokens.grey[0],
+              default: colorValues.grey[10],
+              alt: colorValues.grey[0],
             },
           }),
     },

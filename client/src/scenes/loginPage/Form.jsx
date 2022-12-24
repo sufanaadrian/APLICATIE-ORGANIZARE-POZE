@@ -22,8 +22,8 @@ const registerSchema = yup.object().shape({
   email: yup.string().email("invalid email").required("required"),
   password: yup.string().required("required"),
   location: yup.string().required("required"),
-  camerabody: yup.string().required("required"),
-  cameralens: yup.string().required("required"),
+  cameraBody: yup.string().required("required"),
+  cameraLens: yup.string().required("required"),
   picture: yup.string().required("required"),
 });
 
@@ -38,8 +38,8 @@ const initialValuesRegister = {
   email: "",
   password: "",
   location: "",
-  camerabody: "",
-  cameralens: "",
+  cameraBody: "",
+  cameraLens: "",
   picture: "",
 };
 
@@ -167,24 +167,24 @@ const Form = () => {
                   label="Camera body"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.camerabody}
-                  name="camerabody"
+                  value={values.cameraBody}
+                  name="cameraBody"
                   error={
-                    Boolean(touched.camerabody) && Boolean(errors.camerabody)
+                    Boolean(touched.cameraBody) && Boolean(errors.cameraBody)
                   }
-                  helperText={touched.camerabody && errors.camerabody}
+                  helperText={touched.cameraBody && errors.cameraBody}
                   sx={{ gridColumn: "span 4" }}
                 />
                 <TextField
                   label="Camera lens"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.cameralens}
-                  name="cameralens"
+                  value={values.cameraLens}
+                  name="cameraLens"
                   error={
-                    Boolean(touched.cameralens) && Boolean(errors.cameralens)
+                    Boolean(touched.cameraLens) && Boolean(errors.cameraLens)
                   }
-                  helperText={touched.cameralens && errors.cameralens}
+                  helperText={touched.cameraLens && errors.cameraLens}
                   sx={{ gridColumn: "span 4" }}
                 />
                 <Box

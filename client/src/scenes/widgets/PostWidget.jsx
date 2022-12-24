@@ -17,8 +17,8 @@ const PostWidget = ({
   postUserId,
   name,
   description,
-  camerabody,
-  cameralens,
+  cameraBody,
+  cameraLens,
   location,
   picturePath,
   userPicturePath,
@@ -54,7 +54,7 @@ const PostWidget = ({
       <Friend
         friendId={postUserId}
         name={name}
-        subtitle={"Shot on: " + camerabody + " Location: " + location}
+        subtitle={"Shot on: " + cameraBody + " Location: " + location}
         userPicturePath={userPicturePath}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>

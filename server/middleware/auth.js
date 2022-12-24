@@ -1,21 +1,26 @@
 import jwt from "jsonwebtoken";
 
-export const verifyToken = async (req, res, next) => {
-  try {
-    let token = req.header("Authorization");
+//authorization routers regarding token
 
-    if (!token) {
+export const verifyWithToken = async (req, res, next) => {
+  try {
+    let verifyWithToken = req.header("Authorization");
+
+    if (!verifyWithToken) {
       return res.status(403).send("Access Denied");
     }
 
-    if (token.startsWith("Bearer ")) {
-      token = token.slice(7, token.length).trimLeft();
+    if (verifyWithToken.startsWith("Bearer ")) {
+      verifyWithToken = verifyWithToken
+        .slice(7, verifyWithToken.length)
+        .trimLeft();
     }
 
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified;
+    const verifiedToken = jwt.verify(verifyWithToken, process.env.JWT_SECRET);
+    req.user = verifiedToken;
     next();
   } catch (err) {
+    //500 internal server error
     res.status(500).json({ error: err.message });
   }
 };
