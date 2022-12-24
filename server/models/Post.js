@@ -24,6 +24,10 @@ const postSchema = mongoose.Schema(
       type: Map,
       of: Boolean,
     },
+    isSharable: {
+      type: Boolean,
+      default: false,
+    },
     comments: {
       type: Array,
       default: [],

@@ -1,5 +1,5 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import Friend from "components/Friend";
+import PhotoUpload from "components/PhotoUpload";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,7 +39,7 @@ const FriendListWidget = ({ userId }) => {
       </Typography>
       <Box display="flex" flexDirection="column" gap="1.5rem">
         {friends.map((friend) => (
-          <Friend
+          <PhotoUpload
             key={friend._id}
             friendId={friend._id}
             name={`${friend.firstName} ${friend.lastName}`}

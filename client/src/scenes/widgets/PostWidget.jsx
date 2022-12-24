@@ -2,16 +2,15 @@ import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
-  ShareOutlined,
 } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
-import Friend from "components/Friend";
+import UploadDetails from "components/PhotoUpload";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
-
+import { Button } from "@mui/material";
 const PostWidget = ({
   postId,
   postUserId,
@@ -23,6 +22,7 @@ const PostWidget = ({
   picturePath,
   userPicturePath,
   likes,
+  isSharable,
   comments,
 }) => {
   const [isComments, setIsComments] = useState(false);
@@ -35,7 +35,7 @@ const PostWidget = ({
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
-
+  let isProfile = false;
   const patchLike = async () => {
     const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
       method: "PATCH",
@@ -48,10 +48,24 @@ const PostWidget = ({
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
   };
-
+  const patchSharable = async () => {
+    const response = await fetch(
+      `http://localhost:3001/posts/${postId}/share`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ isSharable: true }),
+      }
+    );
+    const updatedPost = await response.json();
+    dispatch(setPost({ post: updatedPost }));
+  };
   return (
     <WidgetWrapper m="2rem 0">
-      <Friend
+      <UploadDetails
         friendId={postUserId}
         name={name}
         subtitle={"Shot on: " + cameraBody + " Location: " + location}
@@ -69,6 +83,7 @@ const PostWidget = ({
           src={`http://localhost:3001/assets/${picturePath}`}
         />
       )}
+
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
@@ -90,9 +105,33 @@ const PostWidget = ({
           </FlexBetween>
         </FlexBetween>
 
-        <IconButton>
-          <ShareOutlined />
-        </IconButton>
+        {isSharable === false && (
+          <Button
+            onClick={patchSharable}
+            sx={{
+              color: palette.background.alt,
+
+              backgroundColor: palette.primary.main,
+              borderRadius: "3rem",
+
+              "&:hover": {
+                cursor: "pointer",
+                backgroundColor: palette.primary.main,
+
+                transition: "all 0.3s",
+                transform: "scale(1.1) ",
+              },
+            }}
+          >
+            <Typography width="5rem" height="2rem" fontSize="0.8rem">
+              {" "}
+              SHARE THIS TO FEED
+            </Typography>
+          </Button>
+        )}
+        {isSharable && !isProfile ? (
+          <Typography color="rgba(0,0,0,0.5)">on feed</Typography>
+        ) : null}
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">

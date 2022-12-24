@@ -3,6 +3,7 @@ import {
   getPostsFromFeedFunc,
   getPostsByUserFunc,
   likePostFromFeedFunc,
+  sharePostInFeedFunc,
 } from "../controllers/posts.js";
 import { verifyWithToken as verifyWithToken } from "../middleware/auth.js";
 
@@ -14,5 +15,5 @@ router.get("/:userId/posts", verifyWithToken, getPostsByUserFunc);
 
 /* UPDATE */
 router.patch("/:id/like", verifyWithToken, likePostFromFeedFunc);
-
+router.patch("/:id/share", verifyWithToken, sharePostInFeedFunc);
 export default router;

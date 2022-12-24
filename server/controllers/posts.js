@@ -4,7 +4,7 @@ import User from "../models/User.js";
 /* CREATE */
 export const createPostInFeedFunc = async (req, res) => {
   try {
-    const { userId, description, picturePath } = req.body;
+    const { userId, description, picturePath, isSharable } = req.body;
     const user = await User.findById(userId);
     const newPostInfEED = new Post({
       userId,
@@ -17,6 +17,7 @@ export const createPostInFeedFunc = async (req, res) => {
       userPicturePath: user.picturePath,
       picturePath,
       likes: {},
+      isSharable: isSharable,
       comments: [],
     });
     await newPostInfEED.save();
@@ -31,7 +32,7 @@ export const createPostInFeedFunc = async (req, res) => {
 /* READ */
 export const getPostsFromFeedFunc = async (req, res) => {
   try {
-    const post = await Post.find();
+    const post = await Post.find({ isSharable: true });
     res.status(200).json(post);
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -49,6 +50,7 @@ export const getPostsByUserFunc = async (req, res) => {
 };
 
 /* UPDATE */
+
 export const likePostFromFeedFunc = async (req, res) => {
   try {
     const { id } = req.params;
@@ -68,6 +70,19 @@ export const likePostFromFeedFunc = async (req, res) => {
       { new: true }
     );
 
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+export const sharePostInFeedFunc = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      { isSharable: true },
+      { new: true }
+    );
     res.status(200).json(updatedPost);
   } catch (err) {
     res.status(404).json({ message: err.message });

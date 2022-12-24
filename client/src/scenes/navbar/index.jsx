@@ -2,7 +2,6 @@ import { useState } from "react";
 import "../../index.css";
 import {
   Message,
-  AccountBoxOutlined,
   DarkMode,
   LightMode,
   Notifications,
@@ -23,7 +22,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
-import { red } from "@mui/material/colors";
 
 const Navbar = () => {
   const isDesktop = useMediaQuery("(min-width: 1000px)"); //if width >1000 we are on desktop
@@ -61,17 +59,14 @@ const Navbar = () => {
       {/* DESKTOP NAV */}
       {isDesktop ? (
         <FlexBetween gap="2rem">
-          <MenuItem value="Gallery" onClick={() => navigate("/gallery")}>
+          <MenuItem
+            value="Gallery"
+            onClick={() => navigate(`/profile/${loggedInUserId}`)}
+          >
             <CollectionsOutlined
               sx={{ fontSize: "35px" }}
             ></CollectionsOutlined>
             <Typography>Gallery</Typography>
-          </MenuItem>
-          <MenuItem>
-            <AccountBoxOutlined
-              onClick={() => navigate(`/profile/${loggedInUserId}`)}
-              sx={{ fontSize: "35px" }}
-            ></AccountBoxOutlined>
           </MenuItem>
 
           <Message sx={{ fontSize: "20px" }} />
@@ -112,16 +107,16 @@ const Navbar = () => {
             justifyContent="center"
             gap="2rem"
           >
-            <MenuItem value="Gallery" onClick={() => navigate("/gallery")}>
+            <MenuItem
+              value="Gallery"
+              onClick={() => navigate(`/profile/${loggedInUserId}`)}
+            >
               <CollectionsOutlined
                 sx={{ fontSize: "35px" }}
               ></CollectionsOutlined>
               <Typography p="2rem 0rem">Gallery</Typography>
             </MenuItem>
-            <AccountBoxOutlined
-              onClick={() => navigate(`/profile/${loggedInUserId}`)}
-              sx={{ fontSize: "35px" }}
-            ></AccountBoxOutlined>
+
             <Message sx={{ fontSize: "20px" }} />
             <Notifications sx={{ fontSize: "20px" }} />
 
