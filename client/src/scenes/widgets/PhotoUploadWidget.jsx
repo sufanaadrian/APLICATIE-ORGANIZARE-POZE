@@ -64,7 +64,7 @@ const MyPostWidget = ({ picturePath }) => {
             width: "100%",
             backgroundColor: palette.neutral.light,
             borderRadius: "2rem",
-            padding: "1rem 2rem",
+            padding: "0.5rem 1rem",
           }}
         />
       </FlexBetween>
@@ -85,13 +85,23 @@ const MyPostWidget = ({ picturePath }) => {
                 <Box
                   {...getRootProps()}
                   border={`2px dashed ${palette.primary.main}`}
-                  p="1rem"
+                  p="0.5rem"
                   width="100%"
-                  sx={{ "&:hover": { cursor: "pointer" } }}
+                  textAlign="center"
                 >
                   <input {...getInputProps()} />
                   {!image ? (
-                    <p>Add Image Here</p>
+                    <Typography
+                      sx={{
+                        "&:hover": {
+                          cursor: "pointer",
+                          transition: "all 0.3s",
+                          transform: "scale(1.1) ",
+                        },
+                      }}
+                    >
+                      Add or drop image here
+                    </Typography>
                   ) : (
                     <FlexBetween>
                       <Typography>{image.name}</Typography>

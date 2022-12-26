@@ -51,6 +51,7 @@ const Navbar = () => {
               cursor: "pointer",
             },
           }}
+          className="title"
         >
           Photogram
         </Typography>

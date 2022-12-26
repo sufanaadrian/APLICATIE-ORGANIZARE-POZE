@@ -2,6 +2,7 @@ import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
+  Close,
 } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
@@ -25,13 +26,13 @@ const PostWidget = ({
   isSharable,
   comments,
 }) => {
+  const theme = useTheme();
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
-
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
@@ -49,6 +50,7 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
   };
   const patchSharable = async () => {
+    // send a request to set isSharable to true
     const response = await fetch(
       `http://localhost:3001/posts/${postId}/share`,
       {
@@ -63,6 +65,22 @@ const PostWidget = ({
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
   };
+  const patchSharableFalse = async () => {
+    const response = await fetch(
+      `http://localhost:3001/posts/${postId}/removeShare`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ isSharable: false }),
+      }
+    );
+    const updatedPost = await response.json();
+    dispatch(setPost({ post: updatedPost }));
+    window.location.reload();
+  };
   return (
     <WidgetWrapper m="2rem 0">
       <UploadDetails
@@ -71,9 +89,7 @@ const PostWidget = ({
         subtitle={"Shot on: " + cameraBody + " Location: " + location}
         userPicturePath={userPicturePath}
       />
-      <Typography color={main} sx={{ mt: "1rem" }}>
-        {description}
-      </Typography>
+
       {picturePath && (
         <img
           width="100%"
@@ -83,10 +99,12 @@ const PostWidget = ({
           src={`http://localhost:3001/assets/${picturePath}`}
         />
       )}
-
+      <Typography color={main} sx={{ mt: "1rem" }}>
+        {description}
+      </Typography>
       <FlexBetween mt="0.25rem">
-        <FlexBetween gap="1rem">
-          <FlexBetween gap="0.3rem">
+        <FlexBetween gap="0.5rem">
+          <FlexBetween gap="0.2rem">
             <IconButton onClick={patchLike}>
               {isLiked ? (
                 <FavoriteOutlined sx={{ color: primary }} />
@@ -97,11 +115,11 @@ const PostWidget = ({
             <Typography>{likeCount}</Typography>
           </FlexBetween>
 
-          <FlexBetween gap="0.3rem">
+          <FlexBetween gap="0.2rem">
             <IconButton onClick={() => setIsComments(!isComments)}>
               <ChatBubbleOutlineOutlined />
             </IconButton>
-            <Typography>{comments.length}</Typography>
+            <Typography m="0px 1rem 0 0">{comments.length}</Typography>
           </FlexBetween>
         </FlexBetween>
 
@@ -125,13 +143,29 @@ const PostWidget = ({
           >
             <Typography width="5rem" height="2rem" fontSize="0.8rem">
               {" "}
-              SHARE THIS TO FEED
+              SHARE ON FEED
             </Typography>
           </Button>
         )}
-        {isSharable && !isProfile ? (
-          <Typography color="rgba(0,0,0,0.5)">on feed</Typography>
-        ) : null}
+        {isSharable === true && (
+          <Button
+            onClick={patchSharableFalse}
+            sx={{
+              color: "red",
+
+              "&:hover": {
+                cursor: "pointer",
+                backgroundColor: theme.palette.background.alt,
+                transition: "all 0.3s",
+                transform: "scale(1.4)",
+              },
+            }}
+          >
+            <Typography color="rgba(184, 71, 71, 0.8)">on feed - </Typography>
+
+            <Close sx={{ fontSize: "35px" }}></Close>
+          </Button>
+        )}
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">

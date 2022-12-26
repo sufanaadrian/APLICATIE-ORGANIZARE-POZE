@@ -19,7 +19,7 @@ const HomePage = () => {
         justifyContent="center"
       >
         <Box
-          flexBasis={isNonMobileScreens ? "75%" : undefined}
+          flexBasis={isNonMobileScreens ? "100%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
           <PostsWidget userId={_id} />

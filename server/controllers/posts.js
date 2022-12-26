@@ -88,3 +88,16 @@ export const sharePostInFeedFunc = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+export const removePostFromFeedFunc = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      { isSharable: false },
+      { new: true }
+    );
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
