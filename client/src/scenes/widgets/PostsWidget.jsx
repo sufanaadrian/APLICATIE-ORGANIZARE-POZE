@@ -64,7 +64,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             likes,
             isSharable,
             comments,
-            exifData,
           }) => (
             <Col key={_id} xs={12} sm={6} md={2}>
               <PostWidget
@@ -80,7 +79,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
                 likes={likes}
                 isSharable={isSharable}
                 comments={comments}
-                exifData={exifData}
               />
             </Col>
           )
@@ -105,7 +103,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             likes,
             isSharable,
             comments,
-            exifData,
           }) => (
             <Col key={_id} xs={12} sm={6} md={4}>
               <PostWidget
@@ -121,7 +118,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
                 likes={likes}
                 isSharable={isSharable}
                 comments={comments}
-                exifData={exifData}
               />
             </Col>
           )
