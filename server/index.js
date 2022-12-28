@@ -11,16 +11,9 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
-import photoRoutes from "./routes/photos.js";
-import folderRoutes from "./routes/folders.js";
 import { registerFunc } from "./controllers/auth.js";
 import { createPostInFeedFunc } from "./controllers/posts.js";
-import {
-  getPhotosByFolderFunc,
-  uploadPhotoFunc,
-  deletePhotoFunc,
-} from "./controllers/photos.js";
-import { createFolderFunc } from "./controllers/folders.js";
+
 import { verifyWithToken as verifyWithToken } from "./middleware/auth.js";
 import User from "./models/User.js";
 import Post from "./models/Post.js";
@@ -58,13 +51,7 @@ app.post(
   upload.single("picture"),
   createPostInFeedFunc
 );
-app.post(
-  "/photos/upload",
-  verifyWithToken,
-  upload.single("photo"),
-  uploadPhotoFunc
-);
-app.post("/folders", verifyWithToken, createFolderFunc);
+
 /* ROUTES */
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);

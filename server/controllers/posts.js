@@ -19,6 +19,7 @@ export const createPostInFeedFunc = async (req, res) => {
       likes: {},
       isSharable: isSharable,
       comments: [],
+      exifData,
     });
     await newPostInfEED.save();
 

@@ -2,8 +2,8 @@ import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import Navbar from "scenes/navbar";
 import PostsWidget from "scenes/widgets/PostsWidget";
+import Navbar from "scenes/navbar";
 import UserWidget from "scenes/widgets/UserWidget";
 import PhotoUploadWidget from "scenes/widgets/PhotoUploadWidget";
 const ProfilePage = () => {
@@ -49,14 +49,13 @@ const ProfilePage = () => {
       <Navbar />
       <Box
         width="100%"
-        padding="1rem 4%"
+        padding={isNonMobileScreens ? "1%" : "0%"}
         display={isNonMobileScreens ? "flex" : "block"}
         gap="2rem"
         justifyContent="center"
       >
-        {/* <div className="vertical-text">Your gallery</div> */}
         <Box
-          flexBasis={isNonMobileScreens ? "23%" : undefined}
+          flexBasis={isNonMobileScreens ? "25%" : undefined}
           padding="2rem 0%"
         >
           <Typography className="word">
@@ -73,6 +72,7 @@ const ProfilePage = () => {
           <div className="sticky">
             <PhotoUploadWidget picturePath={picturePath} />
             <Box m="2rem 0" />
+
             <UserWidget userId={userId} picturePath={user.picturePath} />
             <Box m="2rem 0" />
           </div>
@@ -80,10 +80,10 @@ const ProfilePage = () => {
         </Box>
 
         <Box
-          flexBasis={isNonMobileScreens ? "74%" : undefined}
-          mt={isNonMobileScreens ? undefined : "2rem"}
+          flexBasis={isNonMobileScreens ? undefined : "30%"}
+          mt={isNonMobileScreens ? undefined : undefined}
+          ml={isNonMobileScreens ? undefined : "2rem"}
         >
-          {/* <Box m="1rem 0" /> */}
           <PostsWidget userId={userId} isProfile />
         </Box>
       </Box>

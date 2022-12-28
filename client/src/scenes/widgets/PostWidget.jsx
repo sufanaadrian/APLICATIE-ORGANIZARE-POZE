@@ -2,13 +2,26 @@ import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
-  Close,
+  RemoveCircleOutlineOutlined,
+  SendOutlined,
+  ShareOutlined,
+  MoreVert,
 } from "@mui/icons-material";
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import {
+  Box,
+  Divider,
+  IconButton,
+  MenuItem,
+  Menu,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import UploadDetails from "components/PhotoUpload";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
 import { Button } from "@mui/material";
@@ -36,7 +49,31 @@ const PostWidget = ({
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
-  let isProfile = false;
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [originalWidth, setOriginalWidth] = useState(0);
+  const [originalHeight, setOriginalHeight] = useState(0);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const regex = /\/profile/;
+
+  useEffect(() => {
+    const imgElement = document.querySelector(".post-image");
+    setOriginalWidth(imgElement.offsetWidth);
+    setOriginalHeight(imgElement.offsetHeight);
+  }, []);
+  const toggleFullScreen = () => {
+    setIsFullScreen(!isFullScreen);
+  };
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setIsMenuVisible(true);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setIsMenuVisible(false);
+  };
+
   const patchLike = async () => {
     const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
       method: "PATCH",
@@ -79,10 +116,96 @@ const PostWidget = ({
     );
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
-    window.location.reload();
+    if (!regex.test(window.location.pathname)) {
+      window.location.reload();
+    }
   };
+  function shareOnFeedBtn(isSharable) {
+    return (
+      isSharable === false && (
+        <div>
+          <IconButton onClick={handleMenuClick}>
+            <ShareOutlined sx={{ color: palette.primary.main }} />
+          </IconButton>
+
+          <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            keepMounted
+            open={isMenuVisible}
+            onClose={handleMenuClose}
+            sx={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+          >
+            <MenuItem
+              onClick={patchSharable}
+              sx={{
+                opacity: "1",
+                "&:hover": {
+                  cursor: "pointer",
+                  color: palette.primary.main,
+                },
+              }}
+            >
+              <Typography>Share on feed</Typography>
+            </MenuItem>
+          </Menu>
+        </div>
+      )
+    );
+  }
+
+  function unshareFromFeedBtn(isSharable) {
+    if (loggedInUserId === postUserId) {
+      return (
+        isSharable === true && (
+          <div>
+            <IconButton onClick={handleMenuClick}>
+              <RemoveCircleOutlineOutlined
+                sx={{ color: "red" }}
+              ></RemoveCircleOutlineOutlined>
+            </IconButton>
+
+            <Menu
+              anchorEl={anchorEl}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              keepMounted
+              open={isMenuVisible}
+              onClose={handleMenuClose}
+              sx={{
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                opacity: "1",
+              }}
+            >
+              <MenuItem
+                onClick={patchSharableFalse}
+                sx={{
+                  opacity: "1",
+                  "&:hover": {
+                    cursor: "pointer",
+                    color: "red",
+                  },
+                }}
+              >
+                <Typography>Remove from feed</Typography>
+              </MenuItem>
+            </Menu>
+          </div>
+        )
+      );
+    }
+  }
   return (
-    <WidgetWrapper m="2rem 0">
+    <WidgetWrapper m="2rem 0 0 0 ">
+      {isSharable === true && (
+        <Typography
+          sx={{
+            opacity: "0.2",
+            textAlign: "right",
+          }}
+        >
+          On feed
+        </Typography>
+      )}
       <UploadDetails
         friendId={postUserId}
         name={name}
@@ -90,15 +213,21 @@ const PostWidget = ({
         userPicturePath={userPicturePath}
       />
 
-      {picturePath && (
-        <img
-          width="100%"
-          height="auto"
-          alt="post"
-          style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={`http://localhost:3001/assets/${picturePath}`}
-        />
-      )}
+      <div
+        className={isFullScreen ? "full-screen" : ""}
+        onClick={toggleFullScreen}
+      >
+        {picturePath && (
+          <img
+            className="post-image"
+            width={isFullScreen ? originalWidth : "100%"}
+            height={isFullScreen ? originalHeight : "auto"}
+            alt="post"
+            style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
+            src={`http://localhost:3001/assets/${picturePath}`}
+          />
+        )}
+      </div>
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
       </Typography>
@@ -122,50 +251,9 @@ const PostWidget = ({
             <Typography m="0px 1rem 0 0">{comments.length}</Typography>
           </FlexBetween>
         </FlexBetween>
+        {unshareFromFeedBtn(isSharable)}
 
-        {isSharable === false && (
-          <Button
-            onClick={patchSharable}
-            sx={{
-              color: palette.background.alt,
-
-              backgroundColor: palette.primary.main,
-              borderRadius: "3rem",
-
-              "&:hover": {
-                cursor: "pointer",
-                backgroundColor: palette.primary.main,
-
-                transition: "all 0.3s",
-                transform: "scale(1.1) ",
-              },
-            }}
-          >
-            <Typography width="5rem" height="2rem" fontSize="0.8rem">
-              {" "}
-              SHARE ON FEED
-            </Typography>
-          </Button>
-        )}
-        {isSharable === true && (
-          <Button
-            onClick={patchSharableFalse}
-            sx={{
-              color: "red",
-
-              "&:hover": {
-                cursor: "pointer",
-                backgroundColor: theme.palette.background.alt,
-                transition: "all 0.3s",
-                transform: "scale(1.4)",
-              },
-            }}
-          >
-            <Typography color="rgba(184, 71, 71, 0.8)">on feed - </Typography>
-
-            <Close sx={{ fontSize: "35px" }}></Close>
-          </Button>
-        )}
+        {shareOnFeedBtn(isSharable)}
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">

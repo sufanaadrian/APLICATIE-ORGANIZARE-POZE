@@ -46,7 +46,48 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     // and 0 if a and b are equal.
     return a.createdAt > b.createdAt ? -1 : 1;
   });
-  return (
+  return isProfile ? (
+    <Container lg={5}>
+      <Row style={{ width: "100%" }}>
+        {sortedPosts.map(
+          ({
+            _id,
+            userId,
+            firstName,
+            lastName,
+            description,
+            cameraBody,
+            cameraLens,
+            location,
+            picturePath,
+            userPicturePath,
+            likes,
+            isSharable,
+            comments,
+            exifData,
+          }) => (
+            <Col key={_id} xs={12} sm={6} md={2}>
+              <PostWidget
+                postId={_id}
+                postUserId={userId}
+                name={`${firstName} ${lastName}`}
+                description={description}
+                cameraBody={cameraBody}
+                cameraLens={cameraLens}
+                location={location}
+                picturePath={picturePath}
+                userPicturePath={userPicturePath}
+                likes={likes}
+                isSharable={isSharable}
+                comments={comments}
+                exifData={exifData}
+              />
+            </Col>
+          )
+        )}
+      </Row>
+    </Container>
+  ) : (
     <Container lg={3}>
       <Row style={{ width: "100%" }}>
         {sortedPosts.map(
@@ -64,6 +105,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             likes,
             isSharable,
             comments,
+            exifData,
           }) => (
             <Col key={_id} xs={12} sm={6} md={4}>
               <PostWidget
@@ -79,6 +121,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
                 likes={likes}
                 isSharable={isSharable}
                 comments={comments}
+                exifData={exifData}
               />
             </Col>
           )
