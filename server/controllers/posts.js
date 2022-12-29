@@ -4,7 +4,7 @@ import User from "../models/User.js";
 /* CREATE */
 export const createPostInFeedFunc = async (req, res) => {
   try {
-    const { userId, description, picturePath, isSharable } = req.body;
+    const { userId, description, picturePath, isSharable, exifData } = req.body;
     const user = await User.findById(userId);
     const newPostInfEED = new Post({
       userId,
@@ -19,6 +19,7 @@ export const createPostInFeedFunc = async (req, res) => {
       likes: {},
       isSharable: isSharable,
       comments: [],
+      exifData,
     });
     await newPostInfEED.save();
 
@@ -97,6 +98,19 @@ export const removePostFromFeedFunc = async (req, res) => {
       { new: true }
     );
     res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+export const deletePostFunc = async (req, res) => {
+  try {
+    // Get the postId from the URL parameter
+    const { id } = req.params;
+
+    // Delete the post from the collection
+    await Post.findByIdAndDelete(id);
+    // Send a response to the client
+    res.send({ message: "Post deleted successfully" });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

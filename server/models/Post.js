@@ -32,6 +32,10 @@ const postSchema = mongoose.Schema(
       type: Array,
       default: [],
     },
+    exifData: {
+      type: Object,
+      default: [],
+    },
   },
   { timestamps: true }
 );

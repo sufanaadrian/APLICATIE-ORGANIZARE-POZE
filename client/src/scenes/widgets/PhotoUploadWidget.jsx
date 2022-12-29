@@ -21,7 +21,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
-
+import EXIF from "exif-js";
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
@@ -33,14 +33,21 @@ const MyPostWidget = ({ picturePath }) => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
-
   const handlePost = async () => {
     const formData = new FormData();
     formData.append("userId", _id);
     formData.append("description", post);
+
+    formData.append("picture", image);
+    formData.append("picturePath", image.name);
     if (image) {
-      formData.append("picture", image);
-      formData.append("picturePath", image.name);
+      const exifData = await new Promise((resolve, reject) => {
+        EXIF.getData(image, function () {
+          resolve(EXIF.getAllTags(this));
+        });
+      });
+
+      formData.append("exifData", JSON.stringify(exifData));
     }
     const response = await fetch(`http://localhost:3001/posts`, {
       method: "POST",

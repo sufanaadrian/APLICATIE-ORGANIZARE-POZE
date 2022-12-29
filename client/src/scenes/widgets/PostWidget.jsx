@@ -2,13 +2,12 @@ import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
-  RemoveCircleOutlineOutlined,
-  SendOutlined,
   ShareOutlined,
+  InfoOutlined,
+  RemoveCircleOutlined,
   MoreVert,
+  DeleteOutline,
 } from "@mui/icons-material";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import {
   Box,
   Divider,
@@ -17,6 +16,14 @@ import {
   Menu,
   Typography,
   useTheme,
+  Paper,
+  MenuList,
+  ListItemText,
+  ListItemIcon,
+  ListItem,
+  List,
+  Popper,
+  Popover,
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import UploadDetails from "components/PhotoUpload";
@@ -24,7 +31,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
-import { Button } from "@mui/material";
+import PostsWidget from "./PostsWidget";
 const PostWidget = ({
   postId,
   postUserId,
@@ -38,8 +45,8 @@ const PostWidget = ({
   likes,
   isSharable,
   comments,
+  exifData,
 }) => {
-  const theme = useTheme();
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
@@ -53,20 +60,40 @@ const PostWidget = ({
   const [originalWidth, setOriginalWidth] = useState(0);
   const [originalHeight, setOriginalHeight] = useState(0);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [showExifData, setShowExifData] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const regex = /\/profile/;
+
+  const exifDataObject = JSON.parse(exifData);
 
   useEffect(() => {
     const imgElement = document.querySelector(".post-image");
     setOriginalWidth(imgElement.offsetWidth);
     setOriginalHeight(imgElement.offsetHeight);
-  }, []);
+    const handleScroll = () => {
+      if (isMenuVisible || showExifData) {
+        setIsMenuVisible(false);
+        setShowExifData(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isMenuVisible]);
+  const handleDetailsClick = () => {
+    setShowExifData(!showExifData);
+  };
+
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);
   };
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
     setIsMenuVisible(true);
+    // setTimeout(() => {
+    //   setIsMenuVisible(false);
+    // }, 5000);
   };
 
   const handleMenuClose = () => {
@@ -86,6 +113,7 @@ const PostWidget = ({
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
   };
+
   const patchSharable = async () => {
     // send a request to set isSharable to true
     const response = await fetch(
@@ -120,80 +148,27 @@ const PostWidget = ({
       window.location.reload();
     }
   };
-  function shareOnFeedBtn(isSharable) {
-    return (
-      isSharable === false && (
-        <div>
-          <IconButton onClick={handleMenuClick}>
-            <ShareOutlined sx={{ color: palette.primary.main }} />
-          </IconButton>
-
-          <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            keepMounted
-            open={isMenuVisible}
-            onClose={handleMenuClose}
-            sx={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-          >
-            <MenuItem
-              onClick={patchSharable}
-              sx={{
-                opacity: "1",
-                "&:hover": {
-                  cursor: "pointer",
-                  color: palette.primary.main,
-                },
-              }}
-            >
-              <Typography>Share on feed</Typography>
-            </MenuItem>
-          </Menu>
-        </div>
-      )
-    );
-  }
-
-  function unshareFromFeedBtn(isSharable) {
-    if (loggedInUserId === postUserId) {
-      return (
-        isSharable === true && (
-          <div>
-            <IconButton onClick={handleMenuClick}>
-              <RemoveCircleOutlineOutlined
-                sx={{ color: "red" }}
-              ></RemoveCircleOutlineOutlined>
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorEl}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              keepMounted
-              open={isMenuVisible}
-              onClose={handleMenuClose}
-              sx={{
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
-                opacity: "1",
-              }}
-            >
-              <MenuItem
-                onClick={patchSharableFalse}
-                sx={{
-                  opacity: "1",
-                  "&:hover": {
-                    cursor: "pointer",
-                    color: "red",
-                  },
-                }}
-              >
-                <Typography>Remove from feed</Typography>
-              </MenuItem>
-            </Menu>
-          </div>
-        )
+  const handleDeleteClick = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/posts/${postId}/deletePost`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
+      if (response.ok) {
+        // Fetch the updated list of posts from the server
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error(error);
     }
-  }
+  };
+
   return (
     <WidgetWrapper m="2rem 0 0 0 ">
       {isSharable === true && (
@@ -209,15 +184,14 @@ const PostWidget = ({
       <UploadDetails
         friendId={postUserId}
         name={name}
-        subtitle={"Shot on: " + cameraBody + " Location: " + location}
+        subtitle={"Shot on: " + exifDataObject.Model + " Location: " + location}
         userPicturePath={userPicturePath}
       />
-
       <div
         className={isFullScreen ? "full-screen" : ""}
         onClick={toggleFullScreen}
       >
-        {picturePath && (
+        {!showExifData && picturePath && (
           <img
             className="post-image"
             width={isFullScreen ? originalWidth : "100%"}
@@ -226,6 +200,40 @@ const PostWidget = ({
             style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
             src={`http://localhost:3001/assets/${picturePath}`}
           />
+        )}
+        {showExifData && (
+          <div style={{ position: "relative" }}>
+            <img
+              className="post-image"
+              width={isFullScreen ? originalWidth : "100%"}
+              height={isFullScreen ? originalHeight : "auto"}
+              alt="post"
+              style={{
+                borderRadius: "0.75rem",
+                marginTop: "0.75rem",
+                opacity: "0.1",
+                zIndex: 1,
+              }}
+              src={`http://localhost:3001/assets/${picturePath}`}
+            />
+            <List style={{ position: "absolute", top: 0, left: 0 }}>
+              <ListItem>
+                <ListItemText primary="f:" secondary={exifDataObject.FNumber} />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Shutter speed:"
+                  secondary={exifDataObject.ShutterSpeedValue}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="ISO"
+                  secondary={exifDataObject.ISOSpeedRatings}
+                />
+              </ListItem>
+            </List>
+          </div>
         )}
       </div>
       <Typography color={main} sx={{ mt: "1rem" }}>
@@ -251,9 +259,66 @@ const PostWidget = ({
             <Typography m="0px 1rem 0 0">{comments.length}</Typography>
           </FlexBetween>
         </FlexBetween>
-        {unshareFromFeedBtn(isSharable)}
 
-        {shareOnFeedBtn(isSharable)}
+        <IconButton onClick={handleMenuClick}>
+          <MoreVert />
+        </IconButton>
+
+        <Popper
+          anchorEl={anchorEl}
+          open={isMenuVisible}
+          onClose={handleMenuClose}
+          placement="top-start" // Set the placement of the menu relative to the anchor element
+          disablePortal={true} // Prevent the menu from being rendered in a separate portal element
+          modifiers={{
+            flip: {
+              enabled: true, // Enable flipping of the menu to the opposite side if it overflows the viewport
+            },
+          }}
+          style={{
+            zIndex: "1",
+            opacity: "1",
+            backgroundColor: "rgba(0,0,0,0.5",
+          }}
+        >
+          <Paper>
+            <List>
+              {!isSharable && postUserId === loggedInUserId && (
+                <ListItem onClick={patchSharable}>
+                  <ListItemIcon>
+                    <ShareOutlined fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Share on feed</ListItemText>
+                </ListItem>
+              )}
+              {isSharable && postUserId === loggedInUserId && (
+                <ListItem onClick={patchSharableFalse}>
+                  <ListItemIcon>
+                    <RemoveCircleOutlined fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Remove from feed</ListItemText>
+                </ListItem>
+              )}
+
+              <ListItem onClick={handleDetailsClick}>
+                <ListItemIcon>
+                  <InfoOutlined fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Details</ListItemText>
+              </ListItem>
+              {postUserId === loggedInUserId && (
+                <ListItem onClick={handleDeleteClick} style={{ color: "red" }}>
+                  <ListItemIcon>
+                    <DeleteOutline fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Delete photo</ListItemText>
+                </ListItem>
+              )}
+
+              <Divider />
+            </List>
+          </Paper>
+        </Popper>
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">

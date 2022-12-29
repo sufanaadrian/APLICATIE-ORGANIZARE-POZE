@@ -5,6 +5,7 @@ import {
   likePostFromFeedFunc,
   sharePostInFeedFunc,
   removePostFromFeedFunc,
+  deletePostFunc,
 } from "../controllers/posts.js";
 import { verifyWithToken as verifyWithToken } from "../middleware/auth.js";
 
@@ -19,4 +20,6 @@ router.patch("/:id/like", verifyWithToken, likePostFromFeedFunc);
 router.patch("/:id/share", verifyWithToken, sharePostInFeedFunc);
 router.patch("/:id/removeShare", verifyWithToken, removePostFromFeedFunc);
 
+/* DELETE */
+router.delete("/:id/deletePost", verifyWithToken, deletePostFunc);
 export default router;
