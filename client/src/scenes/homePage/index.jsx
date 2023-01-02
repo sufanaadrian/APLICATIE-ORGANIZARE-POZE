@@ -13,20 +13,24 @@ const HomePage = () => {
       <Navbar />
       <Box
         width="100%"
-        padding={isNonMobileScreens ? "2rem 2%" : "0rem"}
         display={isNonMobileScreens ? "flex" : "block"}
         ml={isNonMobileScreens ? undefined : "1rem"}
         gap="2rem"
         justifyContent="center"
+        mt={isNonMobileScreens ? "2rem" : undefined}
       >
         <Box
-          flexBasis={isNonMobileScreens ? "100%" : undefined}
+          padding={isNonMobileScreens ? "2rem 1%" : "0rem"}
+          flexBasis={isNonMobileScreens ? "60%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
           <PostsWidget userId={_id} />
         </Box>
         {isNonMobileScreens && (
-          <Box flexBasis="25%">
+          <Box
+            flexBasis="25%"
+            padding={isNonMobileScreens ? "2rem 2%" : "0rem"}
+          >
             <AdvertWidget />
             <Box m="2rem 0" />
           </Box>

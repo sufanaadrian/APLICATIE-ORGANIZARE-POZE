@@ -37,7 +37,7 @@ const Navbar = () => {
   const primaryDarkColor = theme.palette.primary.dark;
   const alternativeColor = theme.palette.background.alt;
   return (
-    <FlexBetween padding="1rem 6%" backgroundColor={alternativeColor}>
+    <FlexBetween padding="0.5rem 2%" backgroundColor={alternativeColor}>
       <FlexBetween gap="1.75rem">
         <Typography
           color="primary"
@@ -59,7 +59,7 @@ const Navbar = () => {
 
       {/* DESKTOP NAV */}
       {isDesktop ? (
-        <FlexBetween gap="2rem">
+        <FlexBetween gap="1rem">
           <MenuItem
             value="Gallery"
             onClick={() => navigate(`/profile/${loggedInUserId}`)}

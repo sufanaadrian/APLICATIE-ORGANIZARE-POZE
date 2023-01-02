@@ -12,6 +12,7 @@ export const colorValues = {
     600: "#4D4D4D",
     700: "#333333",
     800: "#1A1A1A",
+    850: "rgba(0, 0, 0, 0.66)",
     900: "#0A0A0A",
     1000: "#000000",
   },
@@ -51,6 +52,8 @@ export const themeSettings = (mode) => {
             },
             background: {
               default: colorValues.grey[900],
+              default_close: colorValues.grey[850],
+
               alt: colorValues.grey[800],
             },
           }
@@ -70,6 +73,8 @@ export const themeSettings = (mode) => {
             },
             background: {
               default: colorValues.grey[10],
+              default_close: colorValues.grey[0],
+
               alt: colorValues.grey[0],
             },
           }),

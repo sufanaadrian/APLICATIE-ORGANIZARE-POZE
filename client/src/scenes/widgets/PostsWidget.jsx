@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 import { Container, Row, Col } from "react-grid-system";
 
-const PostsWidget = ({ userId, sortCriteria }) => {
+const PostsWidget = ({ userId, sortCriteria, filterCriteria }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
@@ -41,15 +41,49 @@ const PostsWidget = ({ userId, sortCriteria }) => {
       getPosts();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  const sortedPosts = Array.isArray(posts)
+  const sortedPostsFeed = Array.isArray(posts)
     ? [...posts].sort((a, b) => {
         return a.createdAt > b.createdAt ? -1 : 1;
       })
     : [];
+  const filteredAndSortedPosts = Array.isArray(posts)
+    ? [...posts]
+        .map((post) => ({
+          ...post,
+          exifDataObject: JSON.parse(post.exifData),
+        }))
+        .sort((a, b) => {
+          switch (sortCriteria) {
+            case "dateUp":
+              return a.createdAt > b.createdAt ? -1 : 1;
+            case "dateDown":
+              return a.createdAt < b.createdAt ? -1 : 1;
+            case "likes":
+              const aLikesCount = Object.keys(a.likes).length;
+              const bLikesCount = Object.keys(b.likes).length;
+              return bLikesCount - aLikesCount;
+            default:
+              return a.createdAt > b.createdAt ? -1 : 1;
+          }
+        })
+        .filter((post) => {
+          switch (filterCriteria) {
+            case "showAll":
+              return post;
+            case "ISO":
+              return post.exifDataObject.FNumber === 1.8;
+            case "isOnFeed":
+              return post.isSharable;
+            default:
+              return post;
+          }
+        })
+    : [];
+
   return regex.test(window.location.pathname) ? (
-    <Container lg={5}>
+    <Container>
       <Row style={{ width: "100%" }}>
-        {sortedPosts.map(
+        {filteredAndSortedPosts.map(
           ({
             _id,
             userId,
@@ -65,6 +99,7 @@ const PostsWidget = ({ userId, sortCriteria }) => {
             isSharable,
             comments,
             exifData,
+            filterCriteria,
           }) => (
             <Col key={_id} xs={12} sm={6} md={2}>
               <PostWidget
@@ -81,6 +116,7 @@ const PostsWidget = ({ userId, sortCriteria }) => {
                 isSharable={isSharable}
                 comments={comments}
                 exifData={exifData}
+                filterCriteria={filterCriteria}
               />
             </Col>
           )
@@ -88,9 +124,9 @@ const PostsWidget = ({ userId, sortCriteria }) => {
       </Row>
     </Container>
   ) : (
-    <Container lg={3}>
+    <Container>
       <Row style={{ width: "100%" }}>
-        {sortedPosts.map(
+        {sortedPostsFeed.map(
           ({
             _id,
             userId,

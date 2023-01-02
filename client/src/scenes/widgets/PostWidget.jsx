@@ -12,18 +12,14 @@ import {
   Box,
   Divider,
   IconButton,
-  MenuItem,
-  Menu,
   Typography,
   useTheme,
   Paper,
-  MenuList,
   ListItemText,
   ListItemIcon,
   ListItem,
   List,
   Popper,
-  Popover,
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import UploadDetails from "components/PhotoUpload";
@@ -31,7 +27,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
-import PostsWidget from "./PostsWidget";
+import { useNavigate } from "react-router-dom";
 const PostWidget = ({
   postId,
   postUserId,
@@ -46,6 +42,7 @@ const PostWidget = ({
   isSharable,
   comments,
   exifData,
+  filterCriteria,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
@@ -65,6 +62,7 @@ const PostWidget = ({
   const regex = /\/profile/;
 
   const exifDataObject = JSON.parse(exifData);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const imgElement = document.querySelector(".post-image");
@@ -80,7 +78,7 @@ const PostWidget = ({
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [isMenuVisible]);
+  }, [isMenuVisible, showExifData]);
   const handleDetailsClick = () => {
     setShowExifData(!showExifData);
   };
@@ -90,15 +88,10 @@ const PostWidget = ({
   };
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
-    setIsMenuVisible(true);
-    // setTimeout(() => {
-    //   setIsMenuVisible(false);
-    // }, 5000);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setIsMenuVisible(false);
+    setIsMenuVisible(!isMenuVisible);
+    setTimeout(() => {
+      setIsMenuVisible(false);
+    }, 10000);
   };
 
   const patchLike = async () => {
@@ -170,169 +163,207 @@ const PostWidget = ({
   };
 
   return (
-    <WidgetWrapper m="2rem 0 0 0 ">
-      {isSharable === true && (
-        <Typography
-          sx={{
-            opacity: "0.2",
-            textAlign: "right",
-          }}
+    <WidgetWrapper m="1rem 0 0 0" tag="gallery">
+      <div style={{ position: "relative" }}>
+        {isSharable === true && (
+          <Typography
+            style={{ position: "absolute", top: 0, right: 3, color: "white" }}
+            sx={{
+              opacity: "0.4",
+              textAlign: "right",
+            }}
+          >
+            On feed
+          </Typography>
+        )}
+        <UploadDetails
+          style={{ position: "absolute", top: 0, left: 0 }}
+          friendId={postUserId}
+          name={name}
+          subtitle={
+            "Shot on: " + exifDataObject.Model + " Location: " + location
+          }
+          userPicturePath={userPicturePath}
+          onClick={() => navigate(`/profile/${loggedInUserId}`)}
+        />
+        <div
+          className={isFullScreen ? "full-screen" : ""}
+          onClick={toggleFullScreen}
         >
-          On feed
-        </Typography>
-      )}
-      <UploadDetails
-        friendId={postUserId}
-        name={name}
-        subtitle={"Shot on: " + exifDataObject.Model + " Location: " + location}
-        userPicturePath={userPicturePath}
-      />
-      <div
-        className={isFullScreen ? "full-screen" : ""}
-        onClick={toggleFullScreen}
-      >
-        {!showExifData && picturePath && (
           <img
             className="post-image"
             width={isFullScreen ? originalWidth : "100%"}
             height={isFullScreen ? originalHeight : "auto"}
             alt="post"
-            style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
+            style={{
+              borderRadius: "0.75rem",
+              opacity: showExifData ? "0.1" : "1",
+              zIndex: 1,
+            }}
             src={`http://localhost:3001/assets/${picturePath}`}
           />
-        )}
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              borderRadius: "0.75rem",
+
+              height: "45%",
+              background:
+                "linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1))",
+            }}
+          />
+        </div>
+
         {showExifData && (
-          <div style={{ position: "relative" }}>
-            <img
-              className="post-image"
-              width={isFullScreen ? originalWidth : "100%"}
-              height={isFullScreen ? originalHeight : "auto"}
-              alt="post"
-              style={{
-                borderRadius: "0.75rem",
-                marginTop: "0.75rem",
-                opacity: "0.1",
-                zIndex: 1,
-              }}
-              src={`http://localhost:3001/assets/${picturePath}`}
-            />
-            <List style={{ position: "absolute", top: 0, left: 0 }}>
-              <ListItem>
-                <ListItemText primary="f:" secondary={exifDataObject.FNumber} />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Shutter speed:"
-                  secondary={exifDataObject.ShutterSpeedValue}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="ISO"
-                  secondary={exifDataObject.ISOSpeedRatings}
-                />
-              </ListItem>
-            </List>
-          </div>
+          <List style={{ position: "absolute", top: 0, left: 0 }}>
+            <ListItem>
+              <ListItemText primary="f:" secondary={exifDataObject.FNumber} />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Shutter speed:"
+                secondary={exifDataObject.ShutterSpeedValue}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="ISO"
+                secondary={exifDataObject.ISOSpeedRatings}
+              />
+            </ListItem>
+          </List>
         )}
-      </div>
-      <Typography color={main} sx={{ mt: "1rem" }}>
-        {description}
-      </Typography>
-      <FlexBetween mt="0.25rem">
-        <FlexBetween gap="0.5rem">
-          <FlexBetween gap="0.2rem">
-            <IconButton onClick={patchLike}>
-              {isLiked ? (
-                <FavoriteOutlined sx={{ color: primary }} />
-              ) : (
-                <FavoriteBorderOutlined />
-              )}
-            </IconButton>
-            <Typography>{likeCount}</Typography>
-          </FlexBetween>
-
-          <FlexBetween gap="0.2rem">
-            <IconButton onClick={() => setIsComments(!isComments)}>
-              <ChatBubbleOutlineOutlined />
-            </IconButton>
-            <Typography m="0px 1rem 0 0">{comments.length}</Typography>
-          </FlexBetween>
-        </FlexBetween>
-
-        <IconButton onClick={handleMenuClick}>
-          <MoreVert />
-        </IconButton>
-
-        <Popper
-          anchorEl={anchorEl}
-          open={isMenuVisible}
-          onClose={handleMenuClose}
-          placement="top-start" // Set the placement of the menu relative to the anchor element
-          disablePortal={true} // Prevent the menu from being rendered in a separate portal element
-          modifiers={{
-            flip: {
-              enabled: true, // Enable flipping of the menu to the opposite side if it overflows the viewport
-            },
-          }}
+        <Typography
           style={{
-            zIndex: "1",
-            opacity: "1",
-            backgroundColor: "rgba(0,0,0,0.5",
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            marginBottom: "2.5rem",
+            color: "white",
+            fontSize: "small",
+            fontWeight: "500",
+          }}
+          color={main}
+          sx={{ ml: "0.5rem" }}
+        >
+          {description}
+        </Typography>
+
+        <FlexBetween
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            marginBottom: "0.2rem",
+            color: "white",
           }}
         >
-          <Paper>
-            <List>
-              {!isSharable && postUserId === loggedInUserId && (
-                <ListItem onClick={patchSharable}>
-                  <ListItemIcon>
-                    <ShareOutlined fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Share on feed</ListItemText>
-                </ListItem>
-              )}
-              {isSharable && postUserId === loggedInUserId && (
-                <ListItem onClick={patchSharableFalse}>
-                  <ListItemIcon>
-                    <RemoveCircleOutlined fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Remove from feed</ListItemText>
-                </ListItem>
-              )}
+          <FlexBetween gap="0.1rem">
+            <FlexBetween>
+              <IconButton onClick={patchLike} style={{ color: "white" }}>
+                {isLiked ? (
+                  <FavoriteOutlined sx={{ color: primary }} />
+                ) : (
+                  <FavoriteBorderOutlined />
+                )}
+              </IconButton>
+              <Typography>{likeCount}</Typography>
+            </FlexBetween>
 
-              <ListItem onClick={handleDetailsClick}>
-                <ListItemIcon>
-                  <InfoOutlined fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Details</ListItemText>
-              </ListItem>
-              {postUserId === loggedInUserId && (
-                <ListItem onClick={handleDeleteClick} style={{ color: "red" }}>
-                  <ListItemIcon>
-                    <DeleteOutline fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Delete photo</ListItemText>
-                </ListItem>
-              )}
+            <FlexBetween gap="0.2rem">
+              <IconButton
+                onClick={() => setIsComments(!isComments)}
+                style={{ color: "white" }}
+              >
+                <ChatBubbleOutlineOutlined />
+              </IconButton>
+              <Typography m="0px 1rem 0 0">{comments.length}</Typography>
+            </FlexBetween>
+          </FlexBetween>
+        </FlexBetween>
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            marginBottom: "0.2rem",
+          }}
+        >
+          <IconButton onClick={handleMenuClick} style={{ color: "white" }}>
+            <MoreVert />
+          </IconButton>
 
-              <Divider />
-            </List>
-          </Paper>
-        </Popper>
-      </FlexBetween>
-      {isComments && (
-        <Box mt="0.5rem">
-          {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`}>
-              <Divider />
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {comment}
-              </Typography>
-            </Box>
-          ))}
-          <Divider />
-        </Box>
-      )}
+          <Popper
+            anchorEl={anchorEl}
+            open={isMenuVisible}
+            placement="top-start" // Set the placement of the menu relative to the anchor element
+            disablePortal={true} // Prevent the menu from being rendered in a separate portal element
+            style={{
+              zIndex: "1",
+              opacity: "1",
+              backgroundColor: "rgba(0,0,0,0.5",
+              cursor: "pointer",
+            }}
+          >
+            <Paper>
+              <List>
+                {!isSharable && postUserId === loggedInUserId && (
+                  <ListItem onClick={patchSharable}>
+                    <ListItemIcon>
+                      <ShareOutlined fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Share on feed</ListItemText>
+                  </ListItem>
+                )}
+                {isSharable && postUserId === loggedInUserId && (
+                  <ListItem onClick={patchSharableFalse}>
+                    <ListItemIcon>
+                      <RemoveCircleOutlined fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Remove from feed</ListItemText>
+                  </ListItem>
+                )}
+
+                <ListItem onClick={handleDetailsClick}>
+                  <ListItemIcon>
+                    <InfoOutlined fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Details</ListItemText>
+                </ListItem>
+                {postUserId === loggedInUserId && (
+                  <ListItem
+                    onClick={handleDeleteClick}
+                    style={{ color: "red" }}
+                  >
+                    <ListItemIcon>
+                      <DeleteOutline fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Delete photo</ListItemText>
+                  </ListItem>
+                )}
+
+                <Divider />
+              </List>
+            </Paper>
+          </Popper>
+        </div>
+        {isComments && (
+          <Box mt="0.5rem" style={{ position: "absolute" }}>
+            {comments.map((comment, i) => (
+              <Box key={`${name}-${i}`}>
+                <Divider />
+                <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
+                  {comment}
+                </Typography>
+              </Box>
+            ))}
+            <Divider />
+          </Box>
+        )}
+      </div>
     </WidgetWrapper>
   );
 };

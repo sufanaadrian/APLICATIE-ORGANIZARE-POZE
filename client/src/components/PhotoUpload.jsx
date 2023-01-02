@@ -2,7 +2,6 @@ import { Box, Typography, useTheme } from "@mui/material";
 
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
-
 const UploadDetails = ({ userId, name, subtitle, userPicturePath }) => {
   const { palette } = useTheme();
 
@@ -10,13 +9,14 @@ const UploadDetails = ({ userId, name, subtitle, userPicturePath }) => {
   const regex = /\/profile/;
   if (!regex.test(window.location.pathname)) {
     return (
-      <FlexBetween>
+      <FlexBetween p="0 0 0.5rem 0">
         <FlexBetween gap="1rem">
-          <UserImage image={userPicturePath} size="55px" />
+          <UserImage image={userPicturePath} size="45px" />
           <Box>
             <Typography
               color={palette.primary.main}
-              variant="h5"
+              variant="h6"
+              fontSize="13px"
               fontWeight="500"
             >
               {name}

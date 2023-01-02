@@ -64,6 +64,7 @@ const UserWidget = ({ userId, picturePath }) => {
               variant="h4"
               color={dark}
               fontWeight="500"
+              fontSize="clamp(0.5rem, 1rem, 1.5rem)"
               sx={{
                 "&:hover": {
                   color: palette.primary.light,
@@ -84,15 +85,15 @@ const UserWidget = ({ userId, picturePath }) => {
       {/* SECOND ROW */}
       <Box p="1rem 0">
         <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
-          <LocationOnOutlined fontSize="large" sx={{ color: main }} />
+          <LocationOnOutlined fontSize="small" sx={{ color: main }} />
           <Typography color={medium}>{location}</Typography>
         </Box>
-        <Box display="flex" alignItems="center" gap="1rem" paddingTop="1rem">
-          <CameraAltOutlinedIcon fontSize="large" sx={{ color: main }} />
+        <Box display="flex" alignItems="center" gap="1rem" paddingTop="0.5rem">
+          <CameraAltOutlinedIcon fontSize="small" sx={{ color: main }} />
           <Typography color={medium}>{cameraBody}</Typography>
         </Box>
         <Box display="flex" alignItems="center" gap="1rem" paddingTop="0.4rem">
-          <CameraIcon fontSize="large" sx={{ color: main }} />
+          <CameraIcon fontSize="small" sx={{ color: main }} />
           <Typography color={medium}>{cameraLens}</Typography>
         </Box>
       </Box>
@@ -100,10 +101,12 @@ const UserWidget = ({ userId, picturePath }) => {
       <Divider />
 
       {/* THIRD ROW */}
-      <Box p="1rem 0">
+      <Box p="0.5rem 0">
         <FlexBetween>
-          <Typography color={medium}>Impressions of your post</Typography>
-          <Typography color={main} fontWeight="500">
+          <Typography fontSize="0.6rem" color={medium}>
+            Impressions of your post
+          </Typography>
+          <Typography fontSize="0.6rem" color={main} fontWeight="500">
             {impressions}
           </Typography>
         </FlexBetween>
@@ -112,25 +115,24 @@ const UserWidget = ({ userId, picturePath }) => {
       <Divider />
 
       {/* FOURTH ROW */}
-      <Box p="1rem 0">
-        <Typography fontSize="1rem" color={main} fontWeight="500" mb="1rem">
+      <Box p="0.5rem 0">
+        <Typography fontSize="0.8rem" color={main} fontWeight="500" mb="1rem">
           Social Profiles
         </Typography>
 
-        <FlexBetween gap="1rem" mb="0.5rem">
+        <FlexBetween gap="0.5rem">
           <FlexBetween gap="1rem">
-            <img src="../assets/twitter.png" alt="twitter" />
+            <img src="../assets/linkedin.png" alt="linkedin" />
             <Box>
               <Typography color={main} fontWeight="500">
-                Twitter
+                Linkedin
               </Typography>
-              <Typography color={medium}>Social Network</Typography>
+              <Typography color={medium}>Network Platform</Typography>
             </Box>
           </FlexBetween>
           <EditOutlined sx={{ color: main }} />
         </FlexBetween>
-
-        <FlexBetween gap="1rem">
+        <FlexBetween gap="0.5rem">
           <FlexBetween gap="1rem">
             <img src="../assets/linkedin.png" alt="linkedin" />
             <Box>

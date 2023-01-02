@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import Navbar from "scenes/navbar";
 import UserWidget from "scenes/widgets/UserWidget";
+import SortMenu from "scenes/widgets/SortMenu";
 import PhotoUploadWidget from "scenes/widgets/PhotoUploadWidget";
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
@@ -21,6 +22,8 @@ const ProfilePage = () => {
     const data = await response.json();
     setUser(data);
   };
+  const [sortCriteria, setSortCriteria] = useState("all");
+  const [filterCriteria, setFilterCriteria] = useState("all");
 
   useEffect(() => {
     getUser();
@@ -49,15 +52,13 @@ const ProfilePage = () => {
       <Navbar />
       <Box
         width="100%"
-        padding={isNonMobileScreens ? "1%" : "0%"}
+        padding={isNonMobileScreens ? "1%" : "2%"}
         display={isNonMobileScreens ? "flex" : "block"}
         gap="2rem"
         justifyContent="center"
+        mt={isNonMobileScreens ? "0.5rem" : "1rem"}
       >
-        <Box
-          flexBasis={isNonMobileScreens ? "25%" : undefined}
-          padding="2rem 0%"
-        >
+        <Box>
           <Typography className="word">
             <span>G</span>
             <span>A</span>
@@ -67,11 +68,11 @@ const ProfilePage = () => {
             <span>R</span>
             <span>Y</span>
           </Typography>
-          <Box pb="2rem" />
+          <Box pb="1rem" />
 
           <div className="sticky">
             <PhotoUploadWidget picturePath={picturePath} />
-            <Box m="2rem 0" />
+            <Box m="1rem 0" />
 
             <UserWidget userId={userId} picturePath={user.picturePath} />
             <Box m="2rem 0" />
@@ -80,11 +81,20 @@ const ProfilePage = () => {
         </Box>
 
         <Box
-          flexBasis={isNonMobileScreens ? undefined : "30%"}
+          flexBasis={isNonMobileScreens ? "80%" : "3%"}
           mt={isNonMobileScreens ? undefined : undefined}
           ml={isNonMobileScreens ? undefined : "2rem"}
         >
-          <PostsWidget userId={userId} isProfile />
+          <SortMenu
+            onSortCriteriaChange={setSortCriteria}
+            onFilterCriteriaChange={setFilterCriteria}
+          />
+          <PostsWidget
+            userId={userId}
+            isProfile
+            sortCriteria={sortCriteria}
+            filterCriteria={filterCriteria}
+          />
         </Box>
       </Box>
     </Box>
