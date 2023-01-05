@@ -42,7 +42,7 @@ const PostWidget = ({
   isSharable,
   comments,
   exifData,
-  filterCriteria,
+  isLargeGrid,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
@@ -59,8 +59,8 @@ const PostWidget = ({
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [showExifData, setShowExifData] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [showIconButton, setShowIconButton] = useState(false);
   const regex = /\/profile/;
-
   const exifDataObject = JSON.parse(exifData);
   const navigate = useNavigate();
 
@@ -74,6 +74,7 @@ const PostWidget = ({
         setShowExifData(false);
       }
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -81,6 +82,7 @@ const PostWidget = ({
   }, [isMenuVisible, showExifData]);
   const handleDetailsClick = () => {
     setShowExifData(!showExifData);
+    setIsMenuVisible(!isMenuVisible);
   };
 
   const toggleFullScreen = () => {
@@ -141,6 +143,7 @@ const PostWidget = ({
       window.location.reload();
     }
   };
+
   const handleDeleteClick = async () => {
     try {
       const response = await fetch(
@@ -163,8 +166,181 @@ const PostWidget = ({
   };
 
   return (
-    <WidgetWrapper m="1rem 0 0 0" tag="gallery">
+    <WidgetWrapper
+      m={!isLargeGrid ? "0.5rem 0 0.5rem 0" : "0.1rem 0 0.1rem 0"}
+      tag="gallery"
+      onMouseEnter={() => setShowIconButton(true)}
+      onMouseLeave={() => {
+        setShowIconButton(false);
+        setIsMenuVisible(false);
+      }}
+    >
+      <UploadDetails
+        style={{ position: "absolute", top: 0, left: 0 }}
+        friendId={postUserId}
+        name={name}
+        subtitle={"Shot on: " + exifDataObject.Model + " Location: " + location}
+        userPicturePath={userPicturePath}
+        onClick={() => navigate(`/profile/${loggedInUserId}`)}
+      />
+
       <div style={{ position: "relative" }}>
+        <div
+          className={isFullScreen ? "full-screen" : ""}
+          onClick={toggleFullScreen}
+        >
+          <img
+            className="post-image"
+            width={isFullScreen ? originalWidth : "100%"}
+            height={isFullScreen ? originalHeight : "auto"}
+            alt="post"
+            loading="lazy"
+            border
+            style={{
+              borderRadius: !isLargeGrid ? "0.75rem" : "0",
+              opacity: showExifData ? "0.1" : "1",
+              zIndex: 1,
+            }}
+            src={`http://localhost:3001/assets/${picturePath}`}
+          />
+          {isFullScreen &&
+            isLargeGrid &&
+            regex.test(window.location.pathname) && (
+              <div>
+                <Typography
+                  style={{
+                    position: "fixed",
+                    bottom: 0,
+                    left: 0,
+                    marginBottom: "2.5rem",
+                    color: "white",
+                    fontSize: "small",
+                    fontWeight: "500",
+                  }}
+                  color={main}
+                  sx={{ ml: "0.5rem" }}
+                >
+                  {description}
+                </Typography>
+                <List
+                  className="scrollbar"
+                  style={{
+                    maxHeight: "90vh",
+                    overflow: "auto",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    zIndex: 1,
+                    width: "100%",
+                  }}
+                >
+                  <ListItem>
+                    <ListItemText
+                      primary="f/"
+                      secondary={exifDataObject.FNumber}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Exposure Time:"
+                      secondary={"1/" + 1 / exifDataObject.ExposureTime}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="ISO"
+                      secondary={exifDataObject.ISOSpeedRatings}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Focal length:"
+                      secondary={exifDataObject.FocalLength + "mm"}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Focal length:"
+                      secondary={exifDataObject.FocalLength + "mm"}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Focal length:"
+                      secondary={exifDataObject.FocalLength + "mm"}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Focal length:"
+                      secondary={exifDataObject.FocalLength + "mm"}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Focal length:"
+                      secondary={exifDataObject.FocalLength + "mm"}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Focal length:"
+                      secondary={exifDataObject.FocalLength + "mm"}
+                    />
+                  </ListItem>
+                </List>
+                <FlexBetween
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    marginBottom: "0.2rem",
+                    color: "white",
+                  }}
+                >
+                  <FlexBetween gap="0.1rem">
+                    <FlexBetween>
+                      <IconButton
+                        onClick={patchLike}
+                        style={{ color: "white" }}
+                      >
+                        {isLiked ? (
+                          <FavoriteOutlined sx={{ color: primary }} />
+                        ) : (
+                          <FavoriteBorderOutlined />
+                        )}
+                      </IconButton>
+                      <Typography>{likeCount}</Typography>
+                    </FlexBetween>
+
+                    <FlexBetween gap="0.2rem">
+                      <IconButton
+                        onClick={() => setIsComments(!isComments)}
+                        style={{ color: "white" }}
+                      >
+                        <ChatBubbleOutlineOutlined />
+                      </IconButton>
+                      <Typography m="0px 1rem 0 0">
+                        {comments.length}
+                      </Typography>
+                    </FlexBetween>
+                  </FlexBetween>
+                </FlexBetween>
+              </div>
+            )}
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            borderRadius: !isLargeGrid ? "0.75rem" : "0",
+            height: "45%",
+            background:
+              "linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1))",
+          }}
+        />
         {isSharable === true && (
           <Typography
             style={{ position: "absolute", top: 0, right: 3, color: "white" }}
@@ -176,56 +352,25 @@ const PostWidget = ({
             On feed
           </Typography>
         )}
-        <UploadDetails
-          style={{ position: "absolute", top: 0, left: 0 }}
-          friendId={postUserId}
-          name={name}
-          subtitle={
-            "Shot on: " + exifDataObject.Model + " Location: " + location
-          }
-          userPicturePath={userPicturePath}
-          onClick={() => navigate(`/profile/${loggedInUserId}`)}
-        />
-        <div
-          className={isFullScreen ? "full-screen" : ""}
-          onClick={toggleFullScreen}
-        >
-          <img
-            className="post-image"
-            width={isFullScreen ? originalWidth : "100%"}
-            height={isFullScreen ? originalHeight : "auto"}
-            alt="post"
+        {showExifData && !isLargeGrid && (
+          <List
+            className="scrollbar"
             style={{
-              borderRadius: "0.75rem",
-              opacity: showExifData ? "0.1" : "1",
-              zIndex: 1,
-            }}
-            src={`http://localhost:3001/assets/${picturePath}`}
-          />
-          <div
-            style={{
+              maxHeight: originalHeight,
+              overflow: "auto",
               position: "absolute",
-              bottom: 0,
+              top: 0,
               left: 0,
-              right: 0,
-              borderRadius: "0.75rem",
-
-              height: "45%",
-              background:
-                "linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1))",
+              width: "100%",
             }}
-          />
-        </div>
-
-        {showExifData && (
-          <List style={{ position: "absolute", top: 0, left: 0 }}>
+          >
             <ListItem>
-              <ListItemText primary="f:" secondary={exifDataObject.FNumber} />
+              <ListItemText primary="f/" secondary={exifDataObject.FNumber} />
             </ListItem>
             <ListItem>
               <ListItemText
-                primary="Shutter speed:"
-                secondary={exifDataObject.ShutterSpeedValue}
+                primary="Exposure Time:"
+                secondary={"1/" + 1 / exifDataObject.ExposureTime}
               />
             </ListItem>
             <ListItem>
@@ -234,56 +379,95 @@ const PostWidget = ({
                 secondary={exifDataObject.ISOSpeedRatings}
               />
             </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Focal length:"
+                secondary={exifDataObject.FocalLength + "mm"}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Focal length:"
+                secondary={exifDataObject.FocalLength + "mm"}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Focal length:"
+                secondary={exifDataObject.FocalLength + "mm"}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Focal length:"
+                secondary={exifDataObject.FocalLength + "mm"}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Focal length:"
+                secondary={exifDataObject.FocalLength + "mm"}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Focal length:"
+                secondary={exifDataObject.FocalLength + "mm"}
+              />
+            </ListItem>
           </List>
         )}
-        <Typography
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            marginBottom: "2.5rem",
-            color: "white",
-            fontSize: "small",
-            fontWeight: "500",
-          }}
-          color={main}
-          sx={{ ml: "0.5rem" }}
-        >
-          {description}
-        </Typography>
+        {!isLargeGrid && (
+          <Box>
+            <Typography
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                marginBottom: "2.5rem",
+                color: "white",
+                fontSize: "small",
+                fontWeight: "500",
+              }}
+              color={main}
+              sx={{ ml: "0.5rem" }}
+            >
+              {description}
+            </Typography>
+            <FlexBetween
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                marginBottom: "0.2rem",
+                color: "white",
+              }}
+            >
+              <FlexBetween gap="0.1rem">
+                <FlexBetween>
+                  <IconButton onClick={patchLike} style={{ color: "white" }}>
+                    {isLiked ? (
+                      <FavoriteOutlined sx={{ color: primary }} />
+                    ) : (
+                      <FavoriteBorderOutlined />
+                    )}
+                  </IconButton>
+                  <Typography>{likeCount}</Typography>
+                </FlexBetween>
 
-        <FlexBetween
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            marginBottom: "0.2rem",
-            color: "white",
-          }}
-        >
-          <FlexBetween gap="0.1rem">
-            <FlexBetween>
-              <IconButton onClick={patchLike} style={{ color: "white" }}>
-                {isLiked ? (
-                  <FavoriteOutlined sx={{ color: primary }} />
-                ) : (
-                  <FavoriteBorderOutlined />
-                )}
-              </IconButton>
-              <Typography>{likeCount}</Typography>
+                <FlexBetween gap="0.2rem">
+                  <IconButton
+                    onClick={() => setIsComments(!isComments)}
+                    style={{ color: "white" }}
+                  >
+                    <ChatBubbleOutlineOutlined />
+                  </IconButton>
+                  <Typography m="0px 1rem 0 0">{comments.length}</Typography>
+                </FlexBetween>
+              </FlexBetween>
             </FlexBetween>
-
-            <FlexBetween gap="0.2rem">
-              <IconButton
-                onClick={() => setIsComments(!isComments)}
-                style={{ color: "white" }}
-              >
-                <ChatBubbleOutlineOutlined />
-              </IconButton>
-              <Typography m="0px 1rem 0 0">{comments.length}</Typography>
-            </FlexBetween>
-          </FlexBetween>
-        </FlexBetween>
+          </Box>
+        )}
         <div
           style={{
             position: "absolute",
@@ -292,9 +476,16 @@ const PostWidget = ({
             marginBottom: "0.2rem",
           }}
         >
-          <IconButton onClick={handleMenuClick} style={{ color: "white" }}>
-            <MoreVert />
-          </IconButton>
+          {showIconButton && isLargeGrid && (
+            <IconButton onClick={handleMenuClick} style={{ color: "white" }}>
+              <MoreVert />
+            </IconButton>
+          )}
+          {!isLargeGrid && (
+            <IconButton onClick={handleMenuClick} style={{ color: "white" }}>
+              <MoreVert />
+            </IconButton>
+          )}
 
           <Popper
             anchorEl={anchorEl}
@@ -326,13 +517,15 @@ const PostWidget = ({
                     <ListItemText>Remove from feed</ListItemText>
                   </ListItem>
                 )}
+                {!isLargeGrid && (
+                  <ListItem onClick={handleDetailsClick}>
+                    <ListItemIcon>
+                      <InfoOutlined fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Details</ListItemText>
+                  </ListItem>
+                )}
 
-                <ListItem onClick={handleDetailsClick}>
-                  <ListItemIcon>
-                    <InfoOutlined fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Details</ListItemText>
-                </ListItem>
                 {postUserId === loggedInUserId && (
                   <ListItem
                     onClick={handleDeleteClick}

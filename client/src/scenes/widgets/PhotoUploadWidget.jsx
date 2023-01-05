@@ -64,7 +64,7 @@ const MyPostWidget = ({ picturePath }) => {
     <WidgetWrapper>
       <FlexBetween gap="1.5rem">
         <InputBase
-          placeholder="Upload description.."
+          placeholder="Add img description.."
           onChange={(e) => setPost(e.target.value)}
           value={post}
           sx={{

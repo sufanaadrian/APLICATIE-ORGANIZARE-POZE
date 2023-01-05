@@ -1,5 +1,11 @@
 {
   "dependencies": {
-    "exif-js": "^2.3.0"
+    "context": "^4.0.0",
+    "exif-js": "^2.3.0",
+    "perfect-scrollbar": "^1.5.5",
+    "react-lazy-load-image-component": "^1.5.6",
+    "react-loadable": "^5.5.0",
+    "react-progressive-graceful-image": "^0.7.0",
+    "react-progressive-image": "^0.6.0"
   }
 }

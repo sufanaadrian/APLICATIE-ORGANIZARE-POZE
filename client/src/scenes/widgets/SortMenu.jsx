@@ -1,5 +1,4 @@
 import {
-  useMediaQuery,
   Paper,
   ListItemText,
   ListItemIcon,
@@ -7,6 +6,9 @@ import {
   List,
   Popper,
   IconButton,
+  TextField,
+  Button,
+  useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material";
 import {
@@ -14,17 +16,25 @@ import {
   FilterAltOutlined,
   ArrowUpwardOutlined,
   ArrowDownwardOutlined,
-  ShareOutlined,
+  GridViewOutlined,
 } from "@mui/icons-material";
 import { useState, useEffect } from "react";
-const SortMenu = ({ onSortCriteriaChange, onFilterCriteriaChange }) => {
-  const isNonMobileScreens = useMediaQuery("(min-width:1300px)");
+const SortMenu = ({
+  onSortCriteriaChange,
+  onFilterCriteriaChange,
+  onXLChange,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isSortMenuVisible, setIsSortMenuVisible] = useState(false);
   const [isFilterMenuVisible, setIsFilterSortMenuVisible] = useState(false);
-
   const { palette } = useTheme();
-  const main = palette.neutral.main;
+  const [isoInput, setIsoInput] = useState("");
+  const [apertureInput, setApertureInput] = useState("");
+  const [exposureInput, setExposureInput] = useState("");
+  const [focalLengthInput, setFocalLengthInput] = useState("");
+  const [xl, setXl] = useState(1);
+  const isNonMobile = useMediaQuery("(min-width:600px)");
+
   useEffect(() => {
     const handleScroll = () => {
       if (isSortMenuVisible || isFilterMenuVisible) {
@@ -32,6 +42,7 @@ const SortMenu = ({ onSortCriteriaChange, onFilterCriteriaChange }) => {
         setIsFilterSortMenuVisible(false);
       }
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -52,9 +63,16 @@ const SortMenu = ({ onSortCriteriaChange, onFilterCriteriaChange }) => {
   };
   const setCriteriaClick = (sortCriteria) => {
     onSortCriteriaChange(sortCriteria);
+    setIsSortMenuVisible(false);
   };
   const setFilterCriteriaClick = (filterCriteria) => {
     onFilterCriteriaChange(filterCriteria);
+    setIsFilterSortMenuVisible(!isFilterMenuVisible);
+  };
+  const handleXlButtonClick = () => {
+    console.log(xl);
+    onXLChange(xl === 1 ? 2 : 1);
+    setXl(xl === 1 ? 2 : 1);
   };
   return (
     <div>
@@ -157,7 +175,7 @@ const SortMenu = ({ onSortCriteriaChange, onFilterCriteriaChange }) => {
               sx={{
                 "&:hover": {
                   transition: "all 0.3s",
-                  transform: "scale(1.1) ",
+                  backgroundColor: palette.primary.light,
                   cursor: "pointer",
                 },
               }}
@@ -169,7 +187,7 @@ const SortMenu = ({ onSortCriteriaChange, onFilterCriteriaChange }) => {
               sx={{
                 "&:hover": {
                   transition: "all 0.3s",
-                  transform: "scale(1.1) ",
+                  backgroundColor: palette.primary.light,
                   cursor: "pointer",
                 },
               }}
@@ -181,28 +199,81 @@ const SortMenu = ({ onSortCriteriaChange, onFilterCriteriaChange }) => {
               sx={{
                 "&:hover": {
                   transition: "all 0.3s",
-                  transform: "scale(1.1) ",
                   cursor: "pointer",
+                  backgroundColor: palette.primary.light,
                 },
               }}
             >
               <ListItemText>Location </ListItemText>
             </ListItem>
-            <ListItem
-              onClick={() => setFilterCriteriaClick("ISO")}
-              sx={{
-                "&:hover": {
-                  transition: "all 0.3s",
-                  transform: "scale(1.1) ",
-                  cursor: "pointer",
-                },
-              }}
-            >
-              <ListItemText>ISO</ListItemText>
+            <ListItem>
+              <TextField
+                type="number"
+                label="ISO Ex: 100"
+                size="small"
+                onChange={(event) => setIsoInput(event.target.value)}
+              />
+              <Button
+                onClick={() => setFilterCriteriaClick("ISO:" + isoInput)}
+                size="small"
+              >
+                Filter
+              </Button>
+            </ListItem>
+            <ListItem>
+              <TextField
+                type="number"
+                label="Aperture Ex: f/1.8"
+                size="small"
+                onChange={(event) => setApertureInput(event.target.value)}
+              />
+              <Button
+                onClick={() => setFilterCriteriaClick("f/" + apertureInput)}
+                size="small"
+              >
+                Filter
+              </Button>
+            </ListItem>
+            <ListItem>
+              <TextField
+                type="number"
+                label="Exposure Ex: 1/320"
+                size="small"
+                onChange={(event) => setExposureInput(event.target.value)}
+              />
+              <Button
+                onClick={() => setFilterCriteriaClick("1/" + 1 / exposureInput)}
+                size="small"
+              >
+                Filter
+              </Button>
+            </ListItem>
+            <ListItem>
+              <TextField
+                type="number"
+                label="FocalLength Ex: 50mm"
+                size="small"
+                onChange={(event) => setFocalLengthInput(event.target.value)}
+              />
+              <Button
+                onClick={() => setFilterCriteriaClick("mm:" + focalLengthInput)}
+                size="small"
+              >
+                Filter
+              </Button>
             </ListItem>
           </List>
         </Paper>
       </Popper>
+      {isNonMobile && (
+        <IconButton
+          style={{ position: "absolute", right: 0, margin: "0 3rem 0 0" }}
+          onClick={handleXlButtonClick}
+          color={palette.primary.medium}
+        >
+          <GridViewOutlined />
+        </IconButton>
+      )}
     </div>
   );
 };

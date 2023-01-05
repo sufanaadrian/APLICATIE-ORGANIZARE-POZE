@@ -1,15 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 import { Container, Row, Col } from "react-grid-system";
-
-const PostsWidget = ({ userId, sortCriteria, filterCriteria }) => {
+import { Pagination } from "@mui/material";
+const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
   const regex = /\/profile/;
-
+  const [page, setPage] = useState(1);
+  let postsPerPage;
+  let isLargeGrid;
+  if (xl === 2) {
+    postsPerPage = 12;
+    isLargeGrid = false;
+  } else {
+    postsPerPage = 30;
+    isLargeGrid = true;
+  }
   const getPosts = async () => {
     const response = await fetch(
       `http://localhost:3001/posts?isSharable=true`,
@@ -34,6 +43,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria }) => {
 
     dispatch(setPosts({ posts: data }));
   };
+
   useEffect(() => {
     if (regex.test(window.location.pathname)) {
       getUserPosts();
@@ -67,23 +77,37 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria }) => {
           }
         })
         .filter((post) => {
-          switch (filterCriteria) {
-            case "showAll":
-              return post;
-            case "ISO":
-              return post.exifDataObject.FNumber === 1.8;
-            case "isOnFeed":
-              return post.isSharable;
-            default:
-              return post;
+          if (!filterCriteria) return post;
+          if (filterCriteria === "showAll") return post;
+          if (filterCriteria === "isOnFeed") return post.isSharable;
+          if (filterCriteria.startsWith("f/")) {
+            const [, value] = filterCriteria.split("/");
+            return post.exifDataObject.FNumber === Number(value.trim());
+          }
+          if (filterCriteria.startsWith("ISO:")) {
+            const [, value] = filterCriteria.split(":");
+            return post.exifDataObject.ISOSpeedRatings === Number(value.trim());
+          }
+          if (filterCriteria.startsWith("1/")) {
+            const [, value] = filterCriteria.split("/");
+            return post.exifDataObject.ExposureTime === Number(value.trim());
+          }
+          if (filterCriteria.startsWith("mm")) {
+            const [, value] = filterCriteria.split(":");
+            return post.exifDataObject.FocalLength === Number(value.trim());
+          } else {
+            return post;
           }
         })
     : [];
-
+  const paginatedPosts = filteredAndSortedPosts.slice(
+    (page - 1) * postsPerPage,
+    page * postsPerPage
+  );
   return regex.test(window.location.pathname) ? (
     <Container>
-      <Row style={{ width: "100%" }}>
-        {filteredAndSortedPosts.map(
+      <Row gutterWidth={isLargeGrid ? 0 : undefined} style={{ width: "100%" }}>
+        {paginatedPosts.map(
           ({
             _id,
             userId,
@@ -101,7 +125,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria }) => {
             exifData,
             filterCriteria,
           }) => (
-            <Col key={_id} xs={12} sm={6} md={2}>
+            <Col key={_id} xs={12} sm={6} md={3} lg={3} xl={xl}>
               <PostWidget
                 postId={_id}
                 postUserId={userId}
@@ -116,11 +140,19 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria }) => {
                 isSharable={isSharable}
                 comments={comments}
                 exifData={exifData}
-                filterCriteria={filterCriteria}
+                isLargeGrid={isLargeGrid}
               />
             </Col>
           )
         )}
+      </Row>
+      <Row justify="center" style={{ margin: "1rem" }}>
+        <Pagination
+          count={Math.ceil(posts.length / postsPerPage)}
+          page={page}
+          onChange={(event, newPage) => setPage(newPage)}
+          style={{ position: "fixed", bottom: 0, marginBottom: "1rem" }}
+        />
       </Row>
     </Container>
   ) : (
@@ -142,8 +174,9 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria }) => {
             isSharable,
             comments,
             exifData,
+            xl,
           }) => (
-            <Col key={_id} xs={12} sm={6} md={4}>
+            <Col key={_id} xs={3} sm={3} md={5}>
               <PostWidget
                 postId={_id}
                 postUserId={userId}
@@ -158,6 +191,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria }) => {
                 isSharable={isSharable}
                 comments={comments}
                 exifData={exifData}
+                xl={xl}
               />
             </Col>
           )

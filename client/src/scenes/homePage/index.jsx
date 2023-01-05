@@ -17,7 +17,7 @@ const HomePage = () => {
         ml={isNonMobileScreens ? undefined : "1rem"}
         gap="2rem"
         justifyContent="center"
-        mt={isNonMobileScreens ? "2rem" : undefined}
+        mt={isNonMobileScreens ? "0rem" : undefined}
       >
         <Box
           padding={isNonMobileScreens ? "2rem 1%" : "0rem"}

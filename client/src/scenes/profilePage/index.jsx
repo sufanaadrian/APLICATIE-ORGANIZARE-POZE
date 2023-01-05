@@ -1,12 +1,17 @@
 import { Box, Typography, useMediaQuery } from "@mui/material";
-import { useEffect, useState } from "react";
+import { React, useEffect, useState } from "react";
+import Loadable from "react-loadable";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import PostsWidget from "scenes/widgets/PostsWidget";
+
 import Navbar from "scenes/navbar";
 import UserWidget from "scenes/widgets/UserWidget";
 import SortMenu from "scenes/widgets/SortMenu";
 import PhotoUploadWidget from "scenes/widgets/PhotoUploadWidget";
+const PostsWidget = Loadable({
+  loader: () => import("scenes/widgets/PostsWidget"),
+  loading: () => <div>Loading</div>,
+});
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
@@ -24,7 +29,7 @@ const ProfilePage = () => {
   };
   const [sortCriteria, setSortCriteria] = useState("all");
   const [filterCriteria, setFilterCriteria] = useState("all");
-
+  const [xl, setXl] = useState(1);
   useEffect(() => {
     getUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -52,7 +57,7 @@ const ProfilePage = () => {
       <Navbar />
       <Box
         width="100%"
-        padding={isNonMobileScreens ? "1%" : "2%"}
+        padding={isNonMobileScreens ? "0%" : "2%"}
         display={isNonMobileScreens ? "flex" : "block"}
         gap="2rem"
         justifyContent="center"
@@ -88,12 +93,14 @@ const ProfilePage = () => {
           <SortMenu
             onSortCriteriaChange={setSortCriteria}
             onFilterCriteriaChange={setFilterCriteria}
+            onXLChange={setXl}
           />
           <PostsWidget
             userId={userId}
             isProfile
             sortCriteria={sortCriteria}
             filterCriteria={filterCriteria}
+            xl={xl}
           />
         </Box>
       </Box>
