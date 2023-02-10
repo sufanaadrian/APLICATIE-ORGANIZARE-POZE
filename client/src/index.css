@@ -61,6 +61,7 @@ body,
 .menu {
   opacity: 1;
 }
+
 ::-webkit-scrollbar {
   width: 0.2em;
   background-color: none;

@@ -12,6 +12,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
   const [page, setPage] = useState(1);
   let postsPerPage;
   let isLargeGrid;
+  let isProfile;
   if (xl === 2) {
     postsPerPage = 12;
     isLargeGrid = false;
@@ -19,6 +20,9 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
     postsPerPage = 30;
     isLargeGrid = true;
   }
+  if (regex.test(window.location.pathname)) isProfile = true;
+  else isProfile = false;
+
   const getPosts = async () => {
     const response = await fetch(
       `http://localhost:3001/posts?isSharable=true`,
@@ -56,6 +60,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
         return a.createdAt > b.createdAt ? -1 : 1;
       })
     : [];
+
   const filteredAndSortedPosts = Array.isArray(posts)
     ? [...posts]
         .map((post) => ({
@@ -104,6 +109,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
     (page - 1) * postsPerPage,
     page * postsPerPage
   );
+
   return regex.test(window.location.pathname) ? (
     <Container>
       <Row gutterWidth={isLargeGrid ? 0 : undefined} style={{ width: "100%" }}>
@@ -141,6 +147,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
                 comments={comments}
                 exifData={exifData}
                 isLargeGrid={isLargeGrid}
+                isProfile={isProfile}
               />
             </Col>
           )
@@ -174,7 +181,6 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
             isSharable,
             comments,
             exifData,
-            xl,
           }) => (
             <Col key={_id} xs={3} sm={3} md={5}>
               <PostWidget
@@ -191,7 +197,6 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
                 isSharable={isSharable}
                 comments={comments}
                 exifData={exifData}
-                xl={xl}
               />
             </Col>
           )
@@ -200,5 +205,4 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
     </Container>
   );
 };
-
 export default PostsWidget;

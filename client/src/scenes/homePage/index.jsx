@@ -21,20 +21,16 @@ const HomePage = () => {
       >
         <Box
           padding={isNonMobileScreens ? "2rem 1%" : "0rem"}
-          flexBasis={isNonMobileScreens ? "60%" : undefined}
+          flexBasis={isNonMobileScreens ? "60%" : "undefined"}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
           <PostsWidget userId={_id} />
         </Box>
-        {isNonMobileScreens && (
-          <Box
-            flexBasis="25%"
-            padding={isNonMobileScreens ? "2rem 2%" : "0rem"}
-          >
-            <AdvertWidget />
-            <Box m="2rem 0" />
-          </Box>
-        )}
+
+        <Box flexBasis="25%" padding={isNonMobileScreens ? "2rem 2%" : "0rem"}>
+          <AdvertWidget />
+          <Box m="2rem 0" />
+        </Box>
       </Box>
     </Box>
   );

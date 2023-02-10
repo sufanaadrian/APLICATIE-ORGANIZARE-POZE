@@ -1,9 +1,0 @@
-middleware - auth.js
-
-routes - posts.js
-		auth.js
-		users.js
-
-controllers - users.js
-			- posts.js
-			- auth.js

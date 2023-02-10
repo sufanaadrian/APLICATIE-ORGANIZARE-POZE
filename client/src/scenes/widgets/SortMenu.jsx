@@ -33,7 +33,7 @@ const SortMenu = ({
   const [exposureInput, setExposureInput] = useState("");
   const [focalLengthInput, setFocalLengthInput] = useState("");
   const [xl, setXl] = useState(1);
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const isNonMobile = useMediaQuery("(min-width:1000px)");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -70,7 +70,6 @@ const SortMenu = ({
     setIsFilterSortMenuVisible(!isFilterMenuVisible);
   };
   const handleXlButtonClick = () => {
-    console.log(xl);
     onXLChange(xl === 1 ? 2 : 1);
     setXl(xl === 1 ? 2 : 1);
   };
@@ -265,15 +264,18 @@ const SortMenu = ({
           </List>
         </Paper>
       </Popper>
-      {isNonMobile && (
-        <IconButton
-          style={{ position: "absolute", right: 0, margin: "0 3rem 0 0" }}
-          onClick={handleXlButtonClick}
-          color={palette.primary.medium}
-        >
-          <GridViewOutlined />
-        </IconButton>
-      )}
+
+      <IconButton
+        style={{
+          position: "absolute",
+          right: 0,
+          margin: isNonMobile ? "0 3rem 0 0" : "0 1rem 0 0",
+        }}
+        onClick={handleXlButtonClick}
+        color={palette.primary.medium}
+      >
+        <GridViewOutlined />
+      </IconButton>
     </div>
   );
 };

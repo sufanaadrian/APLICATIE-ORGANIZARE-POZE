@@ -12,11 +12,12 @@ const PostsWidget = Loadable({
   loader: () => import("scenes/widgets/PostsWidget"),
   loading: () => <div>Loading</div>,
 });
+
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
   const token = useSelector((state) => state.token);
-  const isNonMobileScreens = useMediaQuery("(min-width:1300px)");
+  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { picturePath } = useSelector((state) => state.user);
 
   const getUser = async () => {
@@ -88,7 +89,7 @@ const ProfilePage = () => {
         <Box
           flexBasis={isNonMobileScreens ? "80%" : "3%"}
           mt={isNonMobileScreens ? undefined : undefined}
-          ml={isNonMobileScreens ? undefined : "2rem"}
+          ml={isNonMobileScreens ? undefined : "0rem"}
         >
           <SortMenu
             onSortCriteriaChange={setSortCriteria}
@@ -97,7 +98,6 @@ const ProfilePage = () => {
           />
           <PostsWidget
             userId={userId}
-            isProfile
             sortCriteria={sortCriteria}
             filterCriteria={filterCriteria}
             xl={xl}

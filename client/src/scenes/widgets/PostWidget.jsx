@@ -43,6 +43,7 @@ const PostWidget = ({
   comments,
   exifData,
   isLargeGrid,
+  isProfile,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
@@ -84,7 +85,6 @@ const PostWidget = ({
     setShowExifData(!showExifData);
     setIsMenuVisible(!isMenuVisible);
   };
-
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);
   };
@@ -195,7 +195,6 @@ const PostWidget = ({
             height={isFullScreen ? originalHeight : "auto"}
             alt="post"
             loading="lazy"
-            border
             style={{
               borderRadius: !isLargeGrid ? "0.75rem" : "0",
               opacity: showExifData ? "0.1" : "1",
@@ -203,131 +202,124 @@ const PostWidget = ({
             }}
             src={`http://localhost:3001/assets/${picturePath}`}
           />
-          {isFullScreen &&
-            isLargeGrid &&
-            regex.test(window.location.pathname) && (
-              <div>
-                <Typography
-                  style={{
-                    position: "fixed",
-                    bottom: 0,
-                    left: 0,
-                    marginBottom: "2.5rem",
-                    color: "white",
-                    fontSize: "small",
-                    fontWeight: "500",
-                  }}
-                  color={main}
-                  sx={{ ml: "0.5rem" }}
-                >
-                  {description}
-                </Typography>
-                <List
-                  className="scrollbar"
-                  style={{
-                    maxHeight: "90vh",
-                    overflow: "auto",
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    zIndex: 1,
-                    width: "100%",
-                  }}
-                >
-                  <ListItem>
-                    <ListItemText
-                      primary="f/"
-                      secondary={exifDataObject.FNumber}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary="Exposure Time:"
-                      secondary={"1/" + 1 / exifDataObject.ExposureTime}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary="ISO"
-                      secondary={exifDataObject.ISOSpeedRatings}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary="Focal length:"
-                      secondary={exifDataObject.FocalLength + "mm"}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary="Focal length:"
-                      secondary={exifDataObject.FocalLength + "mm"}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary="Focal length:"
-                      secondary={exifDataObject.FocalLength + "mm"}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary="Focal length:"
-                      secondary={exifDataObject.FocalLength + "mm"}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary="Focal length:"
-                      secondary={exifDataObject.FocalLength + "mm"}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary="Focal length:"
-                      secondary={exifDataObject.FocalLength + "mm"}
-                    />
-                  </ListItem>
-                </List>
-                <FlexBetween
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    marginBottom: "0.2rem",
-                    color: "white",
-                  }}
-                >
-                  <FlexBetween gap="0.1rem">
-                    <FlexBetween>
-                      <IconButton
-                        onClick={patchLike}
-                        style={{ color: "white" }}
-                      >
-                        {isLiked ? (
-                          <FavoriteOutlined sx={{ color: primary }} />
-                        ) : (
-                          <FavoriteBorderOutlined />
-                        )}
-                      </IconButton>
-                      <Typography>{likeCount}</Typography>
-                    </FlexBetween>
+          {isFullScreen && isLargeGrid && (
+            <div>
+              <Typography
+                style={{
+                  position: "fixed",
+                  bottom: 0,
+                  left: 0,
+                  marginBottom: "2.5rem",
+                  color: "white",
+                  fontSize: "small",
+                  fontWeight: "500",
+                }}
+                color={main}
+                sx={{ ml: "0.5rem" }}
+              >
+                {description}
+              </Typography>
+              <List
+                className="scrollbar"
+                style={{
+                  maxHeight: "90vh",
+                  overflow: "auto",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: 1,
+                  width: "100%",
+                }}
+              >
+                <ListItem>
+                  <ListItemText
+                    primary="f/"
+                    secondary={exifDataObject.FNumber}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Exposure Time:"
+                    secondary={"1/" + 1 / exifDataObject.ExposureTime}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="ISO"
+                    secondary={exifDataObject.ISOSpeedRatings}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Focal length:"
+                    secondary={exifDataObject.FocalLength + "mm"}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Focal length:"
+                    secondary={exifDataObject.FocalLength + "mm"}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Focal length:"
+                    secondary={exifDataObject.FocalLength + "mm"}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Focal length:"
+                    secondary={exifDataObject.FocalLength + "mm"}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Focal length:"
+                    secondary={exifDataObject.FocalLength + "mm"}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Focal length:"
+                    secondary={exifDataObject.FocalLength + "mm"}
+                  />
+                </ListItem>
+              </List>
+              <FlexBetween
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  marginBottom: "0.2rem",
+                  color: "white",
+                }}
+              >
+                <FlexBetween gap="0.1rem">
+                  <FlexBetween>
+                    <IconButton onClick={patchLike} style={{ color: "white" }}>
+                      {isLiked ? (
+                        <FavoriteOutlined sx={{ color: primary }} />
+                      ) : (
+                        <FavoriteBorderOutlined />
+                      )}
+                    </IconButton>
+                    <Typography>{likeCount}</Typography>
+                  </FlexBetween>
 
-                    <FlexBetween gap="0.2rem">
-                      <IconButton
-                        onClick={() => setIsComments(!isComments)}
-                        style={{ color: "white" }}
-                      >
-                        <ChatBubbleOutlineOutlined />
-                      </IconButton>
-                      <Typography m="0px 1rem 0 0">
-                        {comments.length}
-                      </Typography>
-                    </FlexBetween>
+                  <FlexBetween gap="0.2rem">
+                    <IconButton
+                      onClick={() => setIsComments(!isComments)}
+                      style={{ color: "white" }}
+                    >
+                      <ChatBubbleOutlineOutlined />
+                    </IconButton>
+                    <Typography m="0px 1rem 0 0">{comments.length}</Typography>
                   </FlexBetween>
                 </FlexBetween>
-              </div>
-            )}
+              </FlexBetween>
+            </div>
+          )}
         </div>
         <div
           style={{
