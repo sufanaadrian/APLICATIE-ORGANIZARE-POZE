@@ -131,7 +131,14 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
             exifData,
             filterCriteria,
           }) => (
-            <Col key={_id} xs={12} sm={6} md={3} lg={3} xl={xl}>
+            <Col
+              key={_id}
+              xs={xl === 2 ? 12 : 3}
+              sm={xl === 2 ? 6 : 3}
+              md={xl === 2 ? 3 : 2}
+              lg={xl}
+              xl={xl}
+            >
               <PostWidget
                 postId={_id}
                 postUserId={userId}
@@ -182,7 +189,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
             comments,
             exifData,
           }) => (
-            <Col key={_id} xs={3} sm={3} md={5}>
+            <Col key={_id} xs={12} sm={6} md={6} lg={xl} xl={xl}>
               <PostWidget
                 postId={_id}
                 postUserId={userId}

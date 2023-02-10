@@ -97,11 +97,11 @@ body,
 }
 
 .word span:nth-child(2).active {
-  animation: shrinkjump 1s ease-in-out;
+  animation: shrinkJump 1s ease-in-out;
   transform-origin: bottom center;
 }
 
-@keyframes shrinkjump {
+@keyframes shrinkJump {
   10%,
   35% {
     transform: scale(2, 0.2) translate(0, 0);
@@ -165,10 +165,10 @@ body,
 }
 
 .word span:nth-child(5).active {
-  animation: toplong 1.5s linear;
+  animation: topLong 1.5s linear;
 }
 
-@keyframes toplong {
+@keyframes topLong {
   10%,
   40% {
     transform: translateY(-48vh) scaleY(1);
@@ -184,6 +184,6 @@ body,
 }
 
 .word span:nth-child(7).active {
-  animation: shrinkjump 1s ease-in-out;
+  animation: shrinkJump 1s ease-in-out;
   transform-origin: bottom center;
 }
