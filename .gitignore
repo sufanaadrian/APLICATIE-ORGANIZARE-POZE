@@ -2,3 +2,5 @@
 MERN-gallery/
 node-modules/
 *.png
+*.jpg
+node_modules/

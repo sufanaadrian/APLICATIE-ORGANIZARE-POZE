@@ -4,8 +4,11 @@ import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 import { Container, Row, Col } from "react-grid-system";
 import { Pagination } from "@mui/material";
+import { getPosts, getUserPosts } from "components/api";
+
 const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
   const dispatch = useDispatch();
+
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
   const regex = /\/profile/;
@@ -23,36 +26,11 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
   if (regex.test(window.location.pathname)) isProfile = true;
   else isProfile = false;
 
-  const getPosts = async () => {
-    const response = await fetch(
-      `http://localhost:3001/posts?isSharable=true`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await response.json();
-
-    dispatch(setPosts({ posts: data }));
-  };
-  const getUserPosts = async () => {
-    const response = await fetch(
-      `http://localhost:3001/posts/${userId}/posts`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await response.json();
-
-    dispatch(setPosts({ posts: data }));
-  };
-
   useEffect(() => {
     if (regex.test(window.location.pathname)) {
-      getUserPosts();
+      getUserPosts(dispatch, token, userId);
     } else {
-      getPosts();
+      getPosts(dispatch, token);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const sortedPostsFeed = Array.isArray(posts)
@@ -100,6 +78,20 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
           if (filterCriteria.startsWith("mm")) {
             const [, value] = filterCriteria.split(":");
             return post.exifDataObject.FocalLength === Number(value.trim());
+          }
+          if (filterCriteria.startsWith("make")) {
+            const [, value] = filterCriteria.split(":");
+            return post.exifDataObject.Make === value.trim();
+          }
+          if (filterCriteria.startsWith("model")) {
+            const [, value] = filterCriteria.split(":");
+            return post.exifDataObject.Model === value.trim();
+          }
+          if (filterCriteria.startsWith("date")) {
+            const [, value] = filterCriteria.split("=");
+            return post.exifDataObject.DateTimeOriginal.startsWith(
+              value.trim()
+            );
           } else {
             return post;
           }
@@ -136,7 +128,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
               xs={xl === 2 ? 12 : 3}
               sm={xl === 2 ? 6 : 3}
               md={xl === 2 ? 3 : 2}
-              lg={xl}
+              lg={xl === 2 ? 3 : xl}
               xl={xl}
             >
               <PostWidget
@@ -189,7 +181,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
             comments,
             exifData,
           }) => (
-            <Col key={_id} xs={12} sm={6} md={6} lg={xl} xl={xl}>
+            <Col key={_id} xs={12} sm={6} md={6} lg={5} xl={4}>
               <PostWidget
                 postId={_id}
                 postUserId={userId}

@@ -28,6 +28,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
 import { useNavigate } from "react-router-dom";
+import { getUserPosts } from "components/api";
 const PostWidget = ({
   postId,
   postUserId,
@@ -96,6 +97,26 @@ const PostWidget = ({
     }, 10000);
   };
 
+  const handleDeleteClick = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/posts/${postId}/deletePost`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.ok) {
+        // Call the getUserPosts function to refetch the updated list of posts
+        getUserPosts(dispatch, token, loggedInUserId);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const patchLike = async () => {
     const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
       method: "PATCH",
@@ -141,27 +162,6 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
     if (!regex.test(window.location.pathname)) {
       window.location.reload();
-    }
-  };
-
-  const handleDeleteClick = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3001/posts/${postId}/deletePost`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.ok) {
-        // Fetch the updated list of posts from the server
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -239,7 +239,7 @@ const PostWidget = ({
                 </ListItem>
                 <ListItem>
                   <ListItemText
-                    primary="Exposure Time:"
+                    primary="Exposure Time"
                     secondary={"1/" + 1 / exifDataObject.ExposureTime}
                   />
                 </ListItem>
@@ -251,38 +251,49 @@ const PostWidget = ({
                 </ListItem>
                 <ListItem>
                   <ListItemText
-                    primary="Focal length:"
+                    primary="FocalLength"
                     secondary={exifDataObject.FocalLength + "mm"}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
-                    primary="Focal length:"
-                    secondary={exifDataObject.FocalLength + "mm"}
+                    primary="Make"
+                    secondary={exifDataObject.Make}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
-                    primary="Focal length:"
-                    secondary={exifDataObject.FocalLength + "mm"}
+                    primary="Model"
+                    secondary={exifDataObject.Model}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
-                    primary="Focal length:"
-                    secondary={exifDataObject.FocalLength + "mm"}
+                    primary="DateTime"
+                    secondary={exifDataObject.DateTimeOriginal}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
-                    primary="Focal length:"
-                    secondary={exifDataObject.FocalLength + "mm"}
+                    primary="WhiteBalance"
+                    secondary={exifDataObject.WhiteBalance}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
-                    primary="Focal length:"
-                    secondary={exifDataObject.FocalLength + "mm"}
+                    primary="ExposureMode"
+                    secondary={exifDataObject.ExposureMode}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Flash"
+                    secondary={
+                      exifDataObject.Flash ===
+                      "Flash did not fire, compulsory flash mode"
+                        ? "Off"
+                        : "On"
+                    }
                   />
                 </ListItem>
               </List>
@@ -361,7 +372,7 @@ const PostWidget = ({
             </ListItem>
             <ListItem>
               <ListItemText
-                primary="Exposure Time:"
+                primary="Exposure Time"
                 secondary={"1/" + 1 / exifDataObject.ExposureTime}
               />
             </ListItem>
@@ -373,38 +384,43 @@ const PostWidget = ({
             </ListItem>
             <ListItem>
               <ListItemText
-                primary="Focal length:"
+                primary="FocalLength"
                 secondary={exifDataObject.FocalLength + "mm"}
               />
             </ListItem>
             <ListItem>
+              <ListItemText primary="Make" secondary={exifDataObject.Make} />
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Model" secondary={exifDataObject.Model} />
+            </ListItem>
+            <ListItem>
               <ListItemText
-                primary="Focal length:"
-                secondary={exifDataObject.FocalLength + "mm"}
+                primary="DateTime"
+                secondary={exifDataObject.DateTimeOriginal}
               />
             </ListItem>
             <ListItem>
               <ListItemText
-                primary="Focal length:"
-                secondary={exifDataObject.FocalLength + "mm"}
+                primary="WhiteBalance"
+                secondary={exifDataObject.WhiteBalance}
               />
             </ListItem>
             <ListItem>
               <ListItemText
-                primary="Focal length:"
-                secondary={exifDataObject.FocalLength + "mm"}
+                primary="ExposureMode"
+                secondary={exifDataObject.ExposureMode}
               />
             </ListItem>
             <ListItem>
               <ListItemText
-                primary="Focal length:"
-                secondary={exifDataObject.FocalLength + "mm"}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Focal length:"
-                secondary={exifDataObject.FocalLength + "mm"}
+                primary="Flash"
+                secondary={
+                  exifDataObject.Flash ===
+                  "Flash did not fire, compulsory flash mode"
+                    ? "Off"
+                    : "On"
+                }
               />
             </ListItem>
           </List>

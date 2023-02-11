@@ -20,8 +20,8 @@ const HomePage = () => {
         mt={isNonMobileScreens ? "0rem" : undefined}
       >
         <Box
-          padding={isNonMobileScreens ? "2rem 1%" : "0rem"}
-          flexBasis={isNonMobileScreens ? "60%" : "undefined"}
+          padding={isNonMobileScreens ? "2.5rem 1%" : "0rem"}
+          flexBasis={isNonMobileScreens ? "70%" : "undefined"}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
           <PostsWidget userId={_id} />

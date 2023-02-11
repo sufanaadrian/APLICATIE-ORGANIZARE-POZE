@@ -32,6 +32,10 @@ const SortMenu = ({
   const [apertureInput, setApertureInput] = useState("");
   const [exposureInput, setExposureInput] = useState("");
   const [focalLengthInput, setFocalLengthInput] = useState("");
+  const [makeInput, setMakeInput] = useState("");
+  const [modelInput, setModelInput] = useState("");
+  const [dateInput, setDateInput] = useState("");
+
   const [xl, setXl] = useState(1);
   const isNonMobile = useMediaQuery("(min-width:1000px)");
 
@@ -51,9 +55,6 @@ const SortMenu = ({
   const handleSortMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
     setIsSortMenuVisible(!isSortMenuVisible);
-    setTimeout(() => {
-      setIsSortMenuVisible(false);
-    }, 10000);
     setIsFilterSortMenuVisible(false);
   };
   const handleFilterMenuClick = (event) => {
@@ -68,6 +69,7 @@ const SortMenu = ({
   const setFilterCriteriaClick = (filterCriteria) => {
     onFilterCriteriaChange(filterCriteria);
     setIsFilterSortMenuVisible(!isFilterMenuVisible);
+    console.log(filterCriteria);
   };
   const handleXlButtonClick = () => {
     onXLChange(xl === 1 ? 2 : 1);
@@ -104,6 +106,7 @@ const SortMenu = ({
                 "&:hover": {
                   transition: "all 0.3s",
                   transform: "scale(1.1) ",
+                  backgroundColor: palette.primary.light,
                   cursor: "pointer",
                 },
               }}
@@ -119,6 +122,7 @@ const SortMenu = ({
                 "&:hover": {
                   transition: "all 0.3s",
                   transform: "scale(1.1) ",
+                  backgroundColor: palette.primary.light,
                   cursor: "pointer",
                 },
               }}
@@ -134,6 +138,7 @@ const SortMenu = ({
                 "&:hover": {
                   transition: "all 0.3s",
                   transform: "scale(1.1) ",
+                  backgroundColor: palette.primary.light,
                   cursor: "pointer",
                 },
               }}
@@ -207,7 +212,6 @@ const SortMenu = ({
             </ListItem>
             <ListItem>
               <TextField
-                type="number"
                 label="ISO Ex: 100"
                 size="small"
                 onChange={(event) => setIsoInput(event.target.value)}
@@ -221,7 +225,6 @@ const SortMenu = ({
             </ListItem>
             <ListItem>
               <TextField
-                type="number"
                 label="Aperture Ex: f/1.8"
                 size="small"
                 onChange={(event) => setApertureInput(event.target.value)}
@@ -235,7 +238,6 @@ const SortMenu = ({
             </ListItem>
             <ListItem>
               <TextField
-                type="number"
                 label="Exposure Ex: 1/320"
                 size="small"
                 onChange={(event) => setExposureInput(event.target.value)}
@@ -249,13 +251,52 @@ const SortMenu = ({
             </ListItem>
             <ListItem>
               <TextField
-                type="number"
-                label="FocalLength Ex: 50mm"
+                label="FLength Ex: 50mm"
                 size="small"
                 onChange={(event) => setFocalLengthInput(event.target.value)}
               />
               <Button
                 onClick={() => setFilterCriteriaClick("mm:" + focalLengthInput)}
+                size="small"
+              >
+                Filter
+              </Button>
+            </ListItem>
+            <ListItem>
+              <TextField
+                label="Make Ex: Canon"
+                size="small"
+                onChange={(event) => setMakeInput(event.target.value)}
+              />
+              <Button
+                onClick={() => setFilterCriteriaClick("make:" + makeInput)}
+                size="small"
+              >
+                Filter
+              </Button>
+            </ListItem>
+            <ListItem>
+              <TextField
+                label="Model Ex: 5D Mark IV"
+                size="small"
+                onChange={(event) => setModelInput(event.target.value)}
+              />
+              <Button
+                onClick={() => setFilterCriteriaClick("model:" + modelInput)}
+                size="small"
+              >
+                Filter
+              </Button>
+            </ListItem>
+            <ListItem>
+              <TextField
+                label="Date Ex: 2022:09:11"
+                size="small"
+                onChange={(event) => setDateInput(event.target.value)}
+              />
+              <Button
+                type="date"
+                onClick={() => setFilterCriteriaClick("date=" + dateInput)}
                 size="small"
               >
                 Filter

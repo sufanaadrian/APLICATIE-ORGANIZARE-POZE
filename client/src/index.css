@@ -43,13 +43,14 @@ body,
 .word {
   font-family: "Anton", sans-serif;
   perspective: 1000px;
+  text-align: center;
 }
 
 .word span {
   font-family: "Anton", sans-serif;
   cursor: pointer;
   display: inline-block;
-  font-size: 80px;
+  font-size: 5rem;
   user-select: none;
   line-height: 1;
 }

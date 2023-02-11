@@ -60,42 +60,38 @@ const ProfilePage = () => {
         width="100%"
         padding={isNonMobileScreens ? "0%" : "2%"}
         display={isNonMobileScreens ? "flex" : "block"}
-        gap="2rem"
-        justifyContent="center"
+        gap="3rem"
         mt={isNonMobileScreens ? "0.5rem" : "1rem"}
       >
-        <Box>
-          <Typography className="word">
-            <span>G</span>
-            <span>A</span>
-            <span>L</span>
-            <span>L</span>
-            <span>E</span>
-            <span>R</span>
-            <span>Y</span>
-          </Typography>
+        <Box m="1rem">
+          <Box>
+            <Typography className="word">
+              <span>G</span>
+              <span>A</span>
+              <span>L</span>
+              <span>L</span>
+              <span>E</span>
+              <span>R</span>
+              <span>Y</span>
+            </Typography>
+          </Box>
           <Box pb="1rem" />
 
           <div className="sticky">
-            <PhotoUploadWidget picturePath={picturePath} />
-            <Box m="1rem 0" />
+            <PhotoUploadWidget picturePath={picturePath} userId={userId} />
+            <Box mb="1rem" />
 
             <UserWidget userId={userId} picturePath={user.picturePath} />
-            <Box m="2rem 0" />
+            <Box mb="2rem" />
           </div>
-          {/* <FriendListWidget userId={userId} /> */}
         </Box>
-
-        <Box
-          flexBasis={isNonMobileScreens ? "80%" : "3%"}
-          mt={isNonMobileScreens ? undefined : undefined}
-          ml={isNonMobileScreens ? undefined : "0rem"}
-        >
+        <Box>
           <SortMenu
             onSortCriteriaChange={setSortCriteria}
             onFilterCriteriaChange={setFilterCriteria}
             onXLChange={setXl}
           />
+
           <PostsWidget
             userId={userId}
             sortCriteria={sortCriteria}
