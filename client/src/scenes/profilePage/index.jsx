@@ -85,7 +85,12 @@ const ProfilePage = () => {
             <Box mb="2rem" />
           </div>
         </Box>
-        <Box>
+        <Box
+          ml={xl === 2 ? (isNonMobileScreens ? undefined : "1rem") : undefined}
+          width={
+            xl === 2 ? (isNonMobileScreens ? undefined : "100%") : undefined
+          }
+        >
           <SortMenu
             onSortCriteriaChange={setSortCriteria}
             onFilterCriteriaChange={setFilterCriteria}

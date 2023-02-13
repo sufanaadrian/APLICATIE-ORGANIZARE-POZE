@@ -6,6 +6,7 @@ import {
   sharePostInFeedFunc,
   removePostFromFeedFunc,
   deletePostFunc,
+  generatePDF,
 } from "../controllers/posts.js";
 import { verifyWithToken as verifyWithToken } from "../middleware/auth.js";
 
@@ -22,4 +23,6 @@ router.patch("/:id/removeShare", verifyWithToken, removePostFromFeedFunc);
 
 /* DELETE */
 router.delete("/:id/deletePost", verifyWithToken, deletePostFunc);
+
+/* PDF GENERATOR */
 export default router;

@@ -156,7 +156,10 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
         <Pagination
           count={Math.ceil(posts.length / postsPerPage)}
           page={page}
-          onChange={(event, newPage) => setPage(newPage)}
+          onChange={(event, newPage) => {
+            setPage(newPage);
+            window.scrollTo(0, 0);
+          }}
           style={{ position: "fixed", bottom: 0, marginBottom: "1rem" }}
         />
       </Row>

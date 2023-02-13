@@ -14,20 +14,20 @@ const HomePage = () => {
       <Box
         width="100%"
         display={isNonMobileScreens ? "flex" : "block"}
-        ml={isNonMobileScreens ? undefined : "1rem"}
         gap="2rem"
-        justifyContent="center"
         mt={isNonMobileScreens ? "0rem" : undefined}
       >
         <Box
           padding={isNonMobileScreens ? "2.5rem 1%" : "0rem"}
-          flexBasis={isNonMobileScreens ? "70%" : "undefined"}
+          flexBasis={isNonMobileScreens ? "70%" : "50%"}
+          width={isNonMobileScreens ? undefined : "100%"}
+          ml={isNonMobileScreens ? undefined : "1rem"}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
           <PostsWidget userId={_id} />
         </Box>
 
-        <Box flexBasis="25%" padding={isNonMobileScreens ? "2rem 2%" : "0rem"}>
+        <Box flexBasis="25%" padding={isNonMobileScreens ? "2rem 2%" : "1rem"}>
           <AdvertWidget />
           <Box m="2rem 0" />
         </Box>

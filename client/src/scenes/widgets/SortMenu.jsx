@@ -9,6 +9,7 @@ import {
   TextField,
   Button,
   useMediaQuery,
+  Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material";
 import {
@@ -17,8 +18,11 @@ import {
   ArrowUpwardOutlined,
   ArrowDownwardOutlined,
   GridViewOutlined,
+  PictureAsPdfOutlined,
 } from "@mui/icons-material";
+import { generatePDF } from "components/api";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 const SortMenu = ({
   onSortCriteriaChange,
   onFilterCriteriaChange,
@@ -36,6 +40,9 @@ const SortMenu = ({
   const [modelInput, setModelInput] = useState("");
   const [dateInput, setDateInput] = useState("");
 
+  const token = useSelector((state) => state.token);
+  const loggedInUserId = useSelector((state) => state.user._id);
+
   const [xl, setXl] = useState(1);
   const isNonMobile = useMediaQuery("(min-width:1000px)");
 
@@ -52,6 +59,13 @@ const SortMenu = ({
       window.removeEventListener("scroll", handleScroll);
     };
   }, [isSortMenuVisible, isFilterMenuVisible]);
+
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const handleGeneratePDF = () => {
+    generatePDF(token, loggedInUserId);
+  };
   const handleSortMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
     setIsSortMenuVisible(!isSortMenuVisible);
@@ -316,6 +330,30 @@ const SortMenu = ({
         color={palette.primary.medium}
       >
         <GridViewOutlined />
+      </IconButton>
+      <IconButton
+        style={{
+          position: "absolute",
+          right: 40,
+          margin: isNonMobile ? "0 3rem 0 0" : "0 1rem 0 0",
+        }}
+        onClick={handleGeneratePDF}
+        color={palette.primary.medium}
+      >
+        <PictureAsPdfOutlined />
+      </IconButton>
+      <IconButton
+        style={{
+          position: "fixed",
+          bottom: 0,
+          right: 0,
+          margin: isNonMobile ? "0 3rem 0 0" : "0 1rem 0 0",
+          zIndex: "1",
+        }}
+        onClick={handleScrollToTop}
+        color={palette.primary.medium}
+      >
+        <ArrowUpwardOutlined />
       </IconButton>
     </div>
   );
