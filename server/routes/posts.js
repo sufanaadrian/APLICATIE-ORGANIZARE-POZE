@@ -6,7 +6,6 @@ import {
   sharePostInFeedFunc,
   removePostFromFeedFunc,
   deletePostFunc,
-  generatePDF,
 } from "../controllers/posts.js";
 import { verifyWithToken as verifyWithToken } from "../middleware/auth.js";
 

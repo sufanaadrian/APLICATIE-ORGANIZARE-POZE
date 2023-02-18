@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 import { Container, Row, Col } from "react-grid-system";
 import { Pagination } from "@mui/material";
