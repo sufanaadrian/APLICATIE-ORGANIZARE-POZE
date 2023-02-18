@@ -45,6 +45,15 @@ body,
   perspective: 1000px;
   text-align: center;
 }
+.dropzone {
+  max-height: 50px;
+  overflow-y: scroll;
+}
+
+.dropzone .dz-preview {
+  max-height: 20px;
+  overflow: hidden;
+}
 
 .word span {
   font-family: "Anton", sans-serif;
