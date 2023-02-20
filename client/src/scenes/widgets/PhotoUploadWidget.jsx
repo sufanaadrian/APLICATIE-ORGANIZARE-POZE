@@ -82,87 +82,80 @@ const MyPostWidget = ({ picturePath, userId }) => {
 
   return (
     <WidgetWrapper>
-      {isImage && (
-        <Box
-          border={`1px solid ${medium}`}
-          borderRadius="5px"
-          mt="1rem"
-          p="1rem"
+      <Box border={`1px solid ${medium}`} borderRadius="5px" mt="1rem" p="1rem">
+        <Dropzone
+          acceptedFiles=".jpg,.jpeg,.png"
+          multiple={true} // allow multiple file selection
+          onDrop={(acceptedFiles) => {
+            setImages(acceptedFiles);
+            setHasImage(!hasImage);
+          }} // store all selected files
         >
-          <Dropzone
-            acceptedFiles=".jpg,.jpeg,.png"
-            multiple={true} // allow multiple file selection
-            onDrop={(acceptedFiles) => {
-              setImages(acceptedFiles);
-              setHasImage(!hasImage);
-            }} // store all selected files
-          >
-            {({ getRootProps, getInputProps }) => (
-              <Box {...getRootProps()}>
-                {hasImage ? (
-                  images.map((image, index) => (
-                    <Box key={index}>
-                      <FlexBetween key={index}>
-                        <Typography>{image.name}</Typography>
+          {({ getRootProps, getInputProps }) => (
+            <Box {...getRootProps()}>
+              {hasImage ? (
+                images.map((image, index) => (
+                  <Box key={index}>
+                    <FlexBetween key={index}>
+                      <Typography>{image.name}</Typography>
 
-                        <IconButton
-                          onClick={() => {
-                            removeImage(index);
-                            if (images.length === 1) {
-                              setHasImage(false);
-                            }
-                          }}
-                          sx={{ width: "15%" }}
-                        >
-                          <DeleteOutlined />
-                        </IconButton>
-                      </FlexBetween>
-                      <InputBase
-                        placeholder="Add description"
-                        onChange={(e) => {
-                          const newDescriptions = [...descriptions];
-                          newDescriptions[index] = e.target.value;
-                          setDescriptions(newDescriptions);
+                      <IconButton
+                        onClick={() => {
+                          removeImage(index);
+                          if (images.length === 1) {
+                            setHasImage(false);
+                          }
                         }}
-                        value={descriptions[index]}
-                        sx={{
-                          width: "100%",
-                          backgroundColor: palette.neutral.light,
-                          borderRadius: "2rem",
-                          padding: "0.5rem 1rem",
-                        }}
-                      />
-                    </Box>
-                  ))
-                ) : (
-                  <Typography
-                    sx={{
-                      "&:hover": {
-                        cursor: "pointer",
-                        transition: "all 0.3s",
-                        transform: "scale(1.1) ",
-                      },
-                    }}
-                  >
-                    Add or drop image(s) here
-                  </Typography>
-                )}
-                {!hasImage && <input {...getInputProps()} />}
-              </Box>
-            )}
-          </Dropzone>
-        </Box>
-      )}
-      <Divider sx={{ margin: "1.25rem 0" }} />
+                        sx={{ width: "15%" }}
+                      >
+                        <DeleteOutlined />
+                      </IconButton>
+                    </FlexBetween>
+                    <InputBase
+                      placeholder="Add description"
+                      onChange={(e) => {
+                        const newDescriptions = [...descriptions];
+                        newDescriptions[index] = e.target.value;
+                        setDescriptions(newDescriptions);
+                      }}
+                      value={descriptions[index]}
+                      sx={{
+                        width: "100%",
+                        backgroundColor: palette.neutral.light,
+                        borderRadius: "2rem",
+                        padding: "0.1rem 0.3rem",
+                      }}
+                    />
+                  </Box>
+                ))
+              ) : (
+                <Typography
+                  sx={{
+                    "&:hover": {
+                      cursor: "pointer",
+                      transition: "all 0.3s",
+                      transform: "scale(1.1) ",
+                    },
+                  }}
+                >
+                  Add or drop image(s) here
+                </Typography>
+              )}
+              {!hasImage && <input {...getInputProps()} />}
+            </Box>
+          )}
+        </Dropzone>
+      </Box>
+
+      <Divider sx={{ margin: "0.5rem 0" }} />
 
       <FlexBetween>
-        <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>
-          <ImageOutlined sx={{ color: mediumMain }} />
+        <FlexBetween gap="0.25rem" onClick={() => setHasImage(false)}>
           <Typography
             color={mediumMain}
             sx={{ "&:hover": { cursor: "pointer", color: medium } }}
           >
-            Image
+            Cancel
           </Typography>
         </FlexBetween>
 
