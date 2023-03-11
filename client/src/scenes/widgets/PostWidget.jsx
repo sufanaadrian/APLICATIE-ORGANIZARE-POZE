@@ -63,6 +63,7 @@ const PostWidget = ({
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [showExifData, setShowExifData] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorComments, setAnchorComments] = useState(null);
   const [showIconButton, setShowIconButton] = useState(false);
   const regex = /\/profile/;
   const exifDataObject = JSON.parse(exifData);
@@ -77,6 +78,10 @@ const PostWidget = ({
         setIsMenuVisible(false);
         setShowExifData(false);
       }
+      setTimeout(() => {
+        setIsComments(false);
+        setIsMenuVisible(false);
+      }, 5000);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -94,11 +99,11 @@ const PostWidget = ({
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
     setIsMenuVisible(!isMenuVisible);
-    setTimeout(() => {
-      setIsMenuVisible(false);
-    }, 10000);
   };
-
+  const handleCommentsMenuClick = (event) => {
+    setAnchorComments(event.currentTarget);
+    setIsComments(!isComments);
+  };
   const handleDeleteClick = async () => {
     try {
       const response = await fetch(
@@ -338,7 +343,7 @@ const PostWidget = ({
 
                   <FlexBetween gap="0.2rem">
                     <IconButton
-                      onClick={() => setIsComments(!isComments)}
+                      onClick={handleCommentsMenuClick}
                       style={{ color: "white" }}
                     >
                       <ChatBubbleOutlineOutlined />
@@ -483,7 +488,7 @@ const PostWidget = ({
 
                 <FlexBetween gap="0.2rem">
                   <IconButton
-                    onClick={() => setIsComments(!isComments)}
+                    onClick={handleCommentsMenuClick}
                     style={{ color: "white" }}
                   >
                     <ChatBubbleOutlineOutlined />
@@ -574,19 +579,52 @@ const PostWidget = ({
             </Paper>
           </Popper>
         </div>
-        {isComments && (
-          <Box mt="0.5rem" style={{ position: "absolute" }}>
-            {comments.map((comment, i) => (
-              <Box key={`${name}-${i}`}>
-                <Divider />
-                <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                  {comment}
-                </Typography>
-              </Box>
-            ))}
-            <Divider />
-          </Box>
-        )}
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          right: 0,
+          marginBottom: "0.2rem",
+        }}
+      >
+        <Popper
+          anchorEl={anchorComments}
+          open={isComments}
+          placement="top-start" // Set the placement of the menu relative to the anchor element
+          disablePortal={true} // Prevent the menu from being rendered in a separate portal element
+          style={{
+            zIndex: "1",
+            opacity: "1",
+            backgroundColor: "rgba(0,0,0,0.5",
+            cursor: "pointer",
+          }}
+        >
+          <Paper>
+            {comments
+              .slice()
+              .reverse()
+              .map((comment, i) => (
+                <Box
+                  padding="0.2rem 0.5rem"
+                  display="flex"
+                  maxWidth="250px"
+                  key={`${name}-${i}`}
+                >
+                  <Typography
+                    color={palette.primary.dark}
+                    fontSize="0.7rem"
+                    fontWeight="bold"
+                  >
+                    {"UserId:"}
+                  </Typography>
+                  <Typography fontSize="0.7rem" sx={{}} ml="0.3rem">
+                    {comment}
+                  </Typography>
+                </Box>
+              ))}
+          </Paper>
+        </Popper>
       </div>
     </WidgetWrapper>
   );

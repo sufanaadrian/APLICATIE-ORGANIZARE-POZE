@@ -1,9 +1,4 @@
-import {
-  EditOutlined,
-  DeleteOutlined,
-  ImageOutlined,
-  ContentCutOutlined,
-} from "@mui/icons-material";
+import { DeleteOutlined } from "@mui/icons-material";
 import {
   Box,
   Divider,
@@ -22,11 +17,10 @@ import { useDispatch, useSelector } from "react-redux";
 import EXIF from "exif-js";
 const MyPostWidget = ({ picturePath, userId }) => {
   const dispatch = useDispatch();
-  const [isImage, setIsImage] = useState(false);
   const [hasImage, setHasImage] = useState(false);
   const [images, setImages] = useState([]);
   const [descriptions, setDescriptions] = useState([]);
-  const [post, setPost] = useState("");
+  const [, setPost] = useState("");
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -37,8 +31,6 @@ const MyPostWidget = ({ picturePath, userId }) => {
     const formDatas = [];
     for (let i = 0; i < images.length; i++) {
       const formData = new FormData();
-      console.log(i);
-
       formData.append("userId", _id);
       formData.append("description", descriptions[i]);
       formData.append("picture", images[i]);
@@ -53,6 +45,7 @@ const MyPostWidget = ({ picturePath, userId }) => {
 
         formData.append("exifData", JSON.stringify(exifData));
       }
+
       formDatas.push(formData);
     }
     for (let i = 0; i < formDatas.length; i++) {
