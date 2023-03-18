@@ -240,7 +240,7 @@ const PostWidget = ({
                 color={main}
                 sx={{ ml: "0.5rem" }}
               >
-                {description}
+                {description === "undefined" ? "" : description}
               </Typography>
               <List
                 className="scrollbar"
@@ -463,7 +463,7 @@ const PostWidget = ({
               color={main}
               sx={{ ml: "0.5rem" }}
             >
-              {description}
+              {description === "undefined" ? "" : description}
             </Typography>
             <FlexBetween
               style={{

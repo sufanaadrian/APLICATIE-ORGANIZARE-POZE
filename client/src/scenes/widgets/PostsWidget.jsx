@@ -19,7 +19,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
     postsPerPage = 12;
     isLargeGrid = false;
   } else {
-    postsPerPage = 30;
+    postsPerPage = 1000;
     isLargeGrid = true;
   }
   if (regex.test(window.location.pathname)) isProfile = true;
@@ -128,7 +128,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
               sm={xl === 2 ? 6 : 3}
               md={xl === 2 ? 3 : 2}
               lg={xl === 2 ? 3 : xl}
-              xl={xl}
+              xl={xl === 2 ? xl : 0.8}
             >
               <PostWidget
                 postId={_id}
@@ -151,17 +151,19 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
           )
         )}
       </Row>
-      <Row justify="center" style={{ margin: "1rem" }}>
-        <Pagination
-          count={Math.ceil(posts.length / postsPerPage)}
-          page={page}
-          onChange={(event, newPage) => {
-            setPage(newPage);
-            window.scrollTo(0, 0);
-          }}
-          style={{ position: "fixed", bottom: 0, marginBottom: "1rem" }}
-        />
-      </Row>
+      {xl === 2 && (
+        <Row justify="center" style={{ margin: "1rem" }}>
+          <Pagination
+            count={Math.ceil(posts.length / postsPerPage)}
+            page={page}
+            onChange={(event, newPage) => {
+              setPage(newPage);
+              window.scrollTo(0, 0);
+            }}
+            style={{ position: "fixed", bottom: 0, marginBottom: "1rem" }}
+          />
+        </Row>
+      )}
     </Container>
   ) : (
     <Container>

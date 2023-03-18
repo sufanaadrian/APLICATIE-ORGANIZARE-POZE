@@ -9,6 +9,10 @@ import {
   TextField,
   Button,
   useMediaQuery,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material";
@@ -39,7 +43,7 @@ const SortMenu = ({
   const [makeInput, setMakeInput] = useState("");
   const [modelInput, setModelInput] = useState("");
   const [dateInput, setDateInput] = useState("");
-
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
 
@@ -63,6 +67,16 @@ const SortMenu = ({
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  const handleConfirmClick = () => {
+    setIsConfirmDialogOpen(true);
+  };
+
+  const handleConfirmClose = (confirmed) => {
+    setIsConfirmDialogOpen(false);
+    if (confirmed) {
+      handleGeneratePDF();
+    }
+  };
   const handleGeneratePDF = () => {
     generatePDF(token, loggedInUserId);
   };
@@ -83,7 +97,6 @@ const SortMenu = ({
   const setFilterCriteriaClick = (filterCriteria) => {
     onFilterCriteriaChange(filterCriteria);
     setIsFilterSortMenuVisible(!isFilterMenuVisible);
-    console.log(filterCriteria);
   };
   const handleXlButtonClick = () => {
     onXLChange(xl === 1 ? 2 : 1);
@@ -170,6 +183,17 @@ const SortMenu = ({
       >
         <FilterAltOutlined />
       </IconButton>
+      <Dialog
+        open={isConfirmDialogOpen}
+        onClose={() => handleConfirmClose(false)}
+      >
+        <DialogTitle>{"Do you want to generate a PDF?"}</DialogTitle>
+
+        <DialogActions>
+          <Button onClick={() => handleConfirmClose(false)}>No</Button>
+          <Button onClick={() => handleConfirmClose(true)}>Yes</Button>
+        </DialogActions>
+      </Dialog>
       <Popper
         anchorEl={anchorEl}
         open={isFilterMenuVisible}
@@ -337,7 +361,7 @@ const SortMenu = ({
           right: 40,
           margin: isNonMobile ? "0 3rem 0 0" : "0 1rem 0 0",
         }}
-        onClick={handleGeneratePDF}
+        onClick={handleConfirmClick}
         color={palette.primary.medium}
       >
         <PictureAsPdfOutlined />
