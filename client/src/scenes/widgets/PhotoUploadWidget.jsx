@@ -42,7 +42,6 @@ const MyPostWidget = ({ picturePath, userId }) => {
             resolve(EXIF.getAllTags(this));
           });
         });
-
         formData.append("exifData", JSON.stringify(exifData));
       }
 

@@ -11,9 +11,7 @@ import {
   useMediaQuery,
   Dialog,
   DialogActions,
-  DialogContent,
   DialogTitle,
-  Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material";
 import {
@@ -23,10 +21,12 @@ import {
   ArrowDownwardOutlined,
   GridViewOutlined,
   PictureAsPdfOutlined,
+  ColorLensOutlined,
 } from "@mui/icons-material";
 import { generatePDF } from "components/api";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { SketchPicker } from "react-color";
 const SortMenu = ({
   onSortCriteriaChange,
   onFilterCriteriaChange,
@@ -46,7 +46,8 @@ const SortMenu = ({
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
-
+  const [selectedColor, setSelectedColor] = useState("#ffffff");
+  const [isColorPickerVisible, setIsColorPickerVisible] = useState(false);
   const [xl, setXl] = useState(1);
   const isNonMobile = useMediaQuery("(min-width:1000px)");
 
@@ -80,15 +81,23 @@ const SortMenu = ({
   const handleGeneratePDF = () => {
     generatePDF(token, loggedInUserId);
   };
+  const handleColorMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setIsColorPickerVisible(!isColorPickerVisible);
+    setIsFilterSortMenuVisible(false);
+    setIsSortMenuVisible(false);
+  };
   const handleSortMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
     setIsSortMenuVisible(!isSortMenuVisible);
     setIsFilterSortMenuVisible(false);
+    setIsColorPickerVisible(false);
   };
   const handleFilterMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
     setIsFilterSortMenuVisible(!isFilterMenuVisible);
     setIsSortMenuVisible(false);
+    setIsColorPickerVisible(false);
   };
   const setCriteriaClick = (sortCriteria) => {
     onSortCriteriaChange(sortCriteria);
@@ -104,10 +113,34 @@ const SortMenu = ({
   };
   return (
     <div>
+      <IconButton onClick={handleColorMenuClick}>
+        <ColorLensOutlined />
+      </IconButton>
+      <Popper
+        anchorEl={anchorEl}
+        open={isColorPickerVisible}
+        placement="top-start"
+        disablePortal={true}
+        style={{
+          zIndex: "1",
+          opacity: "1",
+          backgroundColor: "rgba(0,0,0,0.5",
+        }}
+      >
+        {isColorPickerVisible && (
+          <div>
+            <SketchPicker
+              color={selectedColor}
+              onChange={(color) => setSelectedColor(color.hex)}
+            />
+          </div>
+        )}
+      </Popper>
       {/* SORT DATA */}
       <IconButton onClick={handleSortMenuClick} color={palette.primary.medium}>
         <SortOutlined />
       </IconButton>
+
       <Popper
         anchorEl={anchorEl}
         open={isSortMenuVisible}

@@ -68,7 +68,6 @@ const PostWidget = ({
   const regex = /\/profile/;
   const exifDataObject = JSON.parse(exifData);
   const navigate = useNavigate();
-
   useEffect(() => {
     const imgElement = document.querySelector(".post-image");
     setOriginalWidth(imgElement.offsetWidth);
