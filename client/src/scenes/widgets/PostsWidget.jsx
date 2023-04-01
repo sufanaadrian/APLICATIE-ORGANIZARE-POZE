@@ -5,7 +5,13 @@ import { Container, Row, Col } from "react-grid-system";
 import { Pagination } from "@mui/material";
 import { getPosts, getUserPosts } from "components/api";
 
-const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
+const PostsWidget = ({
+  userId,
+  sortCriteria,
+  filterCriteria,
+  colorCriteria,
+  xl,
+}) => {
   const dispatch = useDispatch();
 
   const posts = useSelector((state) => state.posts);
@@ -120,6 +126,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
             isSharable,
             comments,
             exifData,
+            dominantColors,
             filterCriteria,
           }) => (
             <Col
@@ -146,6 +153,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
                 exifData={exifData}
                 isLargeGrid={isLargeGrid}
                 isProfile={isProfile}
+                dominantColors={dominantColors}
               />
             </Col>
           )
@@ -184,6 +192,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
             isSharable,
             comments,
             exifData,
+            dominantColors,
           }) => (
             <Col key={_id} xs={12} sm={6} md={6} lg={5} xl={4}>
               <PostWidget
@@ -200,6 +209,7 @@ const PostsWidget = ({ userId, sortCriteria, filterCriteria, xl }) => {
                 isSharable={isSharable}
                 comments={comments}
                 exifData={exifData}
+                dominantColors={dominantColors}
               />
             </Col>
           )

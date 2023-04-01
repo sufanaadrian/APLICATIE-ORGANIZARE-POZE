@@ -36,6 +36,16 @@ const postSchema = mongoose.Schema(
       type: Object,
       default: [],
     },
+    dominantColors: {
+      type: [
+        {
+          r: { type: Number },
+          g: { type: Number },
+          b: { type: Number },
+        },
+      ],
+      default: [],
+    },
   },
   { timestamps: true }
 );

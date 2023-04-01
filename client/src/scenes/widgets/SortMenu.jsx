@@ -30,6 +30,7 @@ import { SketchPicker } from "react-color";
 const SortMenu = ({
   onSortCriteriaChange,
   onFilterCriteriaChange,
+  onColorCriteriaChange,
   onXLChange,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -107,10 +108,15 @@ const SortMenu = ({
     onFilterCriteriaChange(filterCriteria);
     setIsFilterSortMenuVisible(!isFilterMenuVisible);
   };
+  const setColorPickerValue = (filterCriteria) => {
+    onColorCriteriaChange(filterCriteria);
+    setIsColorPickerVisible(!isColorPickerVisible);
+  };
   const handleXlButtonClick = () => {
     onXLChange(xl === 1 ? 2 : 1);
     setXl(xl === 1 ? 2 : 1);
   };
+
   return (
     <div>
       <IconButton onClick={handleColorMenuClick}>
@@ -128,11 +134,23 @@ const SortMenu = ({
         }}
       >
         {isColorPickerVisible && (
-          <div>
+          <div style={{ backgroundColor: selectedColor, borderRadius: "3%" }}>
             <SketchPicker
               color={selectedColor}
               onChange={(color) => setSelectedColor(color.hex)}
             />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Button
+                style={{
+                  borderRadius: "3%",
+                  color: "white",
+                }}
+                size="small"
+                onClick={() => setColorPickerValue(selectedColor)}
+              >
+                Filter
+              </Button>
+            </div>
           </div>
         )}
       </Popper>

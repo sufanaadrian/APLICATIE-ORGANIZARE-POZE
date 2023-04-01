@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "colorthief": "^2.4.0",
     "context": "^4.0.0",
     "exif-js": "^2.3.0",
     "framer-motion": "^9.0.2",

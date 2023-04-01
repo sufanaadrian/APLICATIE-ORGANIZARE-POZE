@@ -4,7 +4,14 @@ import User from "../models/User.js";
 /* CREATE */
 export const createPostInFeedFunc = async (req, res) => {
   try {
-    const { userId, description, picturePath, isSharable, exifData } = req.body;
+    const {
+      userId,
+      description,
+      picturePath,
+      isSharable,
+      exifData,
+      dominantColors,
+    } = req.body;
     const user = await User.findById(userId);
     const newPostInfEED = new Post({
       userId,
@@ -20,6 +27,7 @@ export const createPostInFeedFunc = async (req, res) => {
       isSharable: isSharable,
       comments: [],
       exifData,
+      dominantColors,
     });
     await newPostInfEED.save();
 

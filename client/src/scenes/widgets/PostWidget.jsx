@@ -47,6 +47,7 @@ const PostWidget = ({
   exifData,
   isLargeGrid,
   isProfile,
+  dominantColors,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();

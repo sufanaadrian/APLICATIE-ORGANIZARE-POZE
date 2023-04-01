@@ -15,6 +15,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import EXIF from "exif-js";
+import ColorThief from "colorthief";
 const MyPostWidget = ({ picturePath, userId }) => {
   const dispatch = useDispatch();
   const [hasImage, setHasImage] = useState(false);
@@ -29,6 +30,7 @@ const MyPostWidget = ({ picturePath, userId }) => {
 
   const handlePost = async () => {
     const formDatas = [];
+    const colorThief = new ColorThief();
     for (let i = 0; i < images.length; i++) {
       const formData = new FormData();
       formData.append("userId", _id);
@@ -43,6 +45,27 @@ const MyPostWidget = ({ picturePath, userId }) => {
           });
         });
         formData.append("exifData", JSON.stringify(exifData));
+        const colorArray = await new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = "Anonymous";
+          img.src = URL.createObjectURL(images[i]);
+          img.onload = () => {
+            const colorArray = colorThief.getPalette(img, 3);
+            resolve(colorArray);
+          };
+        });
+        const dominantColors = [
+          { r: colorArray[0][0], g: colorArray[0][1], b: colorArray[0][2] },
+          { r: colorArray[1][0], g: colorArray[1][1], b: colorArray[1][2] },
+          { r: colorArray[2][0], g: colorArray[2][1], b: colorArray[2][2] },
+        ];
+
+        for (let i = 0; i < dominantColors.length; i++) {
+          const color = dominantColors[i];
+          formData.append(`dominantColors[${i}][r]`, color.r);
+          formData.append(`dominantColors[${i}][g]`, color.g);
+          formData.append(`dominantColors[${i}][b]`, color.b);
+        }
       }
 
       formDatas.push(formData);

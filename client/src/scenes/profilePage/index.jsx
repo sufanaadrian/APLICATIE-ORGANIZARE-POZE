@@ -30,6 +30,7 @@ const ProfilePage = () => {
   };
   const [sortCriteria, setSortCriteria] = useState("all");
   const [filterCriteria, setFilterCriteria] = useState("all");
+  const [colorCriteria, setColorCriteria] = useState("all");
   const [xl, setXl] = useState(1);
   useEffect(() => {
     getUser();
@@ -94,6 +95,7 @@ const ProfilePage = () => {
           <SortMenu
             onSortCriteriaChange={setSortCriteria}
             onFilterCriteriaChange={setFilterCriteria}
+            onColorCriteriaChange={setColorCriteria}
             onXLChange={setXl}
           />
 
@@ -101,6 +103,7 @@ const ProfilePage = () => {
             userId={userId}
             sortCriteria={sortCriteria}
             filterCriteria={filterCriteria}
+            colorCriteria={colorCriteria}
             xl={xl}
           />
         </Box>
