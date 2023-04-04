@@ -1,4 +1,4 @@
-import { DeleteOutlined } from "@mui/icons-material";
+import { DeleteOutlined, LoopOutlined } from "@mui/icons-material";
 import {
   Box,
   Divider,
@@ -21,6 +21,7 @@ const MyPostWidget = ({ picturePath, userId }) => {
   const [hasImage, setHasImage] = useState(false);
   const [images, setImages] = useState([]);
   const [descriptions, setDescriptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [, setPost] = useState("");
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
@@ -30,6 +31,8 @@ const MyPostWidget = ({ picturePath, userId }) => {
 
   const handlePost = async () => {
     const formDatas = [];
+    setIsLoading(!isLoading);
+
     const colorThief = new ColorThief();
     for (let i = 0; i < images.length; i++) {
       const formData = new FormData();
@@ -78,6 +81,7 @@ const MyPostWidget = ({ picturePath, userId }) => {
       });
     }
     setHasImage(!hasImage);
+    setIsLoading(false);
     setImages([]);
     setDescriptions([]);
     setPost("");
@@ -175,15 +179,15 @@ const MyPostWidget = ({ picturePath, userId }) => {
         </FlexBetween>
 
         <Button
-          disabled={images.length === 0}
+          disabled={images.length === 0 || isLoading}
           onClick={handlePost}
           sx={{
             color: palette.background.alt,
-            backgroundColor: palette.primary.main,
+            backgroundColor: isLoading ? "grey" : palette.primary.main,
             borderRadius: "3rem",
           }}
         >
-          ADD PHOTO
+          {isLoading ? "LOADING..." : "ADD PHOTO"}
         </Button>
       </FlexBetween>
     </WidgetWrapper>

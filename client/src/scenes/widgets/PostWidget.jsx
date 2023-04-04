@@ -21,6 +21,7 @@ import {
   ListItem,
   List,
   Popper,
+  useMediaQuery,
 } from "@mui/material";
 
 import FlexBetween from "components/FlexBetween";
@@ -58,6 +59,8 @@ const PostWidget = ({
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
+  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [originalWidth, setOriginalWidth] = useState(0);
   const [originalHeight, setOriginalHeight] = useState(0);
@@ -252,8 +255,53 @@ const PostWidget = ({
                   left: 0,
                   zIndex: 1,
                   width: "100%",
+                  color: "white",
                 }}
               >
+                <ListItem>
+                  <ListItemText
+                    primary="DominantColors Palette"
+                    secondary={
+                      <div
+                        style={{
+                          backgroundColor: !isNonMobileScreens
+                            ? "rgba(0,0,0,0.5)"
+                            : undefined,
+                          padding: "0.3rem",
+                          borderRadius: "0.5rem",
+                          display: "block",
+                        }}
+                      >
+                        {dominantColors.map((color, index) => (
+                          <div
+                            key={index}
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <div
+                              style={{
+                                width: "50px",
+                                height: "50px",
+                                backgroundColor: `rgb(${color.r}, ${color.g}, ${color.b})`,
+                              }}
+                            />
+                            <span
+                              style={{
+                                marginLeft: "10px",
+                                fontWeight: "bold",
+                                color: "white",
+                              }}
+                            >
+                              {`RGB[${index + 1}]: ${color.r} ${color.g} ${
+                                color.b
+                              }`}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    }
+                  />
+                </ListItem>
+
                 <ListItem>
                   <ListItemText
                     primary="f/"
@@ -296,12 +344,7 @@ const PostWidget = ({
                     secondary={exifDataObject.DateTimeOriginal}
                   />
                 </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="WhiteBalance"
-                    secondary={exifDataObject.WhiteBalance}
-                  />
-                </ListItem>
+
                 <ListItem>
                   <ListItemText
                     primary="ExposureMode"
@@ -391,6 +434,72 @@ const PostWidget = ({
             }}
           >
             <ListItem>
+              <ListItemText
+                primary="Colors Palette"
+                secondary={
+                  <div
+                    style={{
+                      backgroundColor: !isNonMobileScreens
+                        ? "rgba(0,0,0,0.5)"
+                        : undefined,
+                      padding: "0.3rem",
+                      borderRadius: "0.5rem",
+                      display: "block",
+                    }}
+                  >
+                    {dominantColors.map((color, index) => (
+                      <div
+                        key={index}
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
+                        <div
+                          style={{
+                            width: isLargeGrid
+                              ? !isNonMobileScreens
+                                ? "50px"
+                                : "30px"
+                              : !isNonMobileScreens
+                              ? "50px"
+                              : "30px",
+                            height: isLargeGrid
+                              ? !isNonMobileScreens
+                                ? "50px"
+                                : "30px"
+                              : !isNonMobileScreens
+                              ? "50px"
+                              : "30px",
+                            backgroundColor: `rgb(${color.r}, ${color.g}, ${color.b})`,
+                          }}
+                        />
+                        <span
+                          style={{
+                            marginLeft: "10px",
+                            fontWeight: isLargeGrid
+                              ? !isNonMobileScreens
+                                ? "bold"
+                                : "undefined"
+                              : !isNonMobileScreens
+                              ? "bold"
+                              : "undefine",
+                            fontSize: isLargeGrid
+                              ? !isNonMobileScreens
+                                ? "0.8rem"
+                                : "0.5rem"
+                              : !isNonMobileScreens
+                              ? "0.8rem"
+                              : "0.5rem",
+                            color: "white",
+                          }}
+                        >
+                          {`[${index + 1}]: ${color.r} ${color.g} ${color.b}`}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                }
+              />
+            </ListItem>
+            <ListItem>
               <ListItemText primary="f/" secondary={exifDataObject.FNumber} />
             </ListItem>
             <ListItem>
@@ -421,12 +530,6 @@ const PostWidget = ({
               <ListItemText
                 primary="DateTime"
                 secondary={exifDataObject.DateTimeOriginal}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="WhiteBalance"
-                secondary={exifDataObject.WhiteBalance}
               />
             </ListItem>
             <ListItem>

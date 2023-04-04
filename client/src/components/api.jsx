@@ -106,7 +106,7 @@ export const generatePDF = async (token, loggedInUserId) => {
     const columnX = i % 2 === 0 ? 10 : 110;
     const rowY = i % 2 === 0 ? y : y;
 
-    pdf.setFontSize(9);
+    pdf.setFontSize(8);
     const valueArray = pdf.splitTextToSize(value, 70);
     pdf.text(columnX, rowY + 5, valueArray);
   }

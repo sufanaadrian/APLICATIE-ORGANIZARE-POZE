@@ -13,7 +13,6 @@ const PostsWidget = ({
   xl,
 }) => {
   const dispatch = useDispatch();
-
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
   const regex = /\/profile/;
@@ -30,7 +29,34 @@ const PostsWidget = ({
   }
   if (regex.test(window.location.pathname)) isProfile = true;
   else isProfile = false;
+  function hexToRgb(hex) {
+    const hexCode = hex.replace("#", "");
+    const r = parseInt(hexCode.substr(0, 2), 16);
+    const g = parseInt(hexCode.substr(2, 2), 16);
+    const b = parseInt(hexCode.substr(4, 2), 16);
+    return [r, g, b];
+  }
+  function isColorInRange(color, range) {
+    const [rMin, rMax, gMin, gMax, bMin, bMax] = range;
+    const [r, g, b] = color.split(",");
+    return (
+      r >= rMin && r <= rMax && g >= gMin && g <= gMax && b >= bMin && b <= bMax
+    );
+  }
 
+  // Add this code block to define the color range from the colorCriteria prop
+  const colorRange = colorCriteria ? hexToRgb(colorCriteria) : null;
+  const rangeThreshold = 30; // adjust this value to define the color range threshold
+  const colorRangeWithThreshold = colorRange
+    ? [
+        Math.max(colorRange[0] - rangeThreshold, 0),
+        Math.min(colorRange[0] + rangeThreshold, 255),
+        Math.max(colorRange[1] - rangeThreshold, 0),
+        Math.min(colorRange[1] + rangeThreshold, 255),
+        Math.max(colorRange[2] - rangeThreshold, 0),
+        Math.min(colorRange[2] + rangeThreshold, 255),
+      ]
+    : null;
   useEffect(() => {
     if (regex.test(window.location.pathname)) {
       getUserPosts(dispatch, token, userId);
@@ -97,6 +123,23 @@ const PostsWidget = ({
             return post.exifDataObject.DateTimeOriginal.startsWith(
               value.trim()
             );
+          }
+          if (colorCriteria !== "all") {
+            const dominantColors = post.dominantColors;
+            let colorInRange = false;
+
+            for (let i = 0; i < dominantColors.length; i++) {
+              const color = `${dominantColors[i].r},${dominantColors[i].g},${dominantColors[i].b}`;
+              colorInRange = isColorInRange(color, colorRangeWithThreshold);
+              if (colorInRange) {
+                break; // Exit the loop if a color is found within range
+              }
+            }
+            if (colorInRange) {
+              return post;
+            } else {
+              return null;
+            }
           } else {
             return post;
           }
