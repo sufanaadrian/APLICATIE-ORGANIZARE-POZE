@@ -46,7 +46,6 @@ const PostsWidget = ({
 
   // Add this code block to define the color range from the colorCriteria prop
   const colorRange = colorCriteria ? hexToRgb(colorCriteria) : null;
-  console.log(colorRange);
 
   const rangeThreshold = 30; // adjust this value to define the color range threshold
   const colorRangeWithThreshold = colorRange
@@ -59,7 +58,6 @@ const PostsWidget = ({
         Math.min(colorRange[2] + colorRange[2] * 0.3, 255),
       ]
     : null;
-  console.log("Colors treshhold:" + colorRangeWithThreshold);
 
   useEffect(() => {
     if (regex.test(window.location.pathname)) {
