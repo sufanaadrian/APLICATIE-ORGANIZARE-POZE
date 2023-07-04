@@ -74,7 +74,7 @@ const MyPostWidget = ({ picturePath, userId }) => {
       formDatas.push(formData);
     }
     for (let i = 0; i < formDatas.length; i++) {
-      await fetch(`http://localhost:3001/posts`, {
+      await fetch(`https://photogramapp.vercel.app/posts`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formDatas[i],
