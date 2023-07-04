@@ -21,13 +21,10 @@ const ProfilePage = () => {
   const { picturePath } = useSelector((state) => state.user);
 
   const getUser = async () => {
-    const response = await fetch(
-      `https://photogramapp.vercel.app/users/${userId}`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const data = await response.json();
     setUser(data);
   };

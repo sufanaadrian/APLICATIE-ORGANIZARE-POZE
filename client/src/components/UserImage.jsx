@@ -8,7 +8,7 @@ const UserImage = ({ image, size = "50px" }) => {
         width={size}
         height={size}
         alt="user"
-        src={`https://photogramapp.vercel.app/assets/${image}`}
+        src={`http://localhost:3001/assets/${image}`}
       />
     </Box>
   );
