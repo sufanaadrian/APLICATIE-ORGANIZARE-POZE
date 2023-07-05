@@ -26,7 +26,7 @@ import {
 import { generatePDF } from "components/api";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-// import { SketchPicker } from "react-color";
+import { SketchPicker } from "react-color";
 const SortMenu = ({
   onSortCriteriaChange,
   onFilterCriteriaChange,
@@ -135,10 +135,10 @@ const SortMenu = ({
       >
         {isColorPickerVisible && (
           <div style={{ backgroundColor: selectedColor, borderRadius: "3%" }}>
-            {/* <SketchPicker
+            <SketchPicker
               color={selectedColor}
               onChange={(color) => setSelectedColor(color.hex)}
-            /> */}
+            />
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Button
                 style={{
