@@ -1,4 +1,4 @@
-![image](https://github.com/sufanaadrian/APLICATIE-ORGANIZARE-POZE/assets/115484136/06bad58a-fa0b-463e-97b4-3aa6828af22f)# APLICATIE-ORGANIZARE-POZE
+# APLICATIE-ORGANIZARE-POZE
 
 What is Photogram?
 
