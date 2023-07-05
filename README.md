@@ -1,4 +1,4 @@
-# APLICATIE-ORGANIZARE-POZE
+# Photogram
 
 What is Photogram?
 
